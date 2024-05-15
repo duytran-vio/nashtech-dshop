@@ -1,10 +1,10 @@
-package com.nashtech.dshop;
+package com.nashtech.dshop_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DshopApplicationTests {
+class DshopApiApplicationTests {
 
 	@Test
 	void contextLoads() {
