@@ -9,6 +9,7 @@ import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
+import com.nashtech.dshop_api.exceptions.UserNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
 import com.nashtech.dshop_api.services.UserService;
 
@@ -27,7 +28,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDto createUser(UserCreateRequest userDto) {
         User user = mapper.toEntity(userDto);
-        // System.out.println(user.toString());
         userRepository.save(user);
         return mapper.toDto(user);
     }
@@ -38,5 +38,12 @@ public class UserServiceImpl implements UserService{
                             .stream()
                             .map(mapper::toDto)
                             .toList();
+    }
+
+    @Override 
+    public UserDto getUserById(Long id) {
+        return userRepository.findById(id)
+                            .map(mapper::toDto)
+                            .orElseThrow(() -> new UserNotFoundException());
     }
 }
