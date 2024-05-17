@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review extends AuditEntity<Integer> {
+public class Review extends AuditEntity<Long> {
     @Column(name = "RATING", nullable = false)
     private int rating;
 

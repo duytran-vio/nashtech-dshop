@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order extends AuditEntity<Integer> {
+public class Order extends AuditEntity<Long> {
     @Column(name = "TOTAL", nullable = false)
     private double total;
 

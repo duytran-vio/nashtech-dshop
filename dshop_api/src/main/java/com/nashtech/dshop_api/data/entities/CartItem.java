@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItem extends AuditEntity<Integer> {
+public class CartItem extends AuditEntity<Long> {
     @Column(name = "QUANTITY", nullable = false)
     private int quantity;
 

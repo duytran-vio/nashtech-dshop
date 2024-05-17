@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cart extends AuditEntity<Integer> {
+public class Cart extends AuditEntity<Long> {
     @OneToOne
     @JoinColumn(name = "CUSTOMER_ID")
     private User customer;

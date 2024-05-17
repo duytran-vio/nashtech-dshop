@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItem extends AuditEntity<Integer> {
+public class OrderItem extends AuditEntity<Long> {
     @Column(name = "QUANTITY", nullable = false)
     private int quantity;
 

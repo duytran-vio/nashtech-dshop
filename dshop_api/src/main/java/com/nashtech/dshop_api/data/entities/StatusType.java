@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatusType extends AuditEntity<Integer>{
+public class StatusType extends AuditEntity<Long>{
 
     @Column(name = "STATUS_NAME", unique = true)
     private String statusName;

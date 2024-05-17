@@ -20,7 +20,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product extends AuditEntity<Integer> {
+public class Product extends AuditEntity<Long> {
     @Column(name = "PRODUCT_NAME", nullable = false)
     private String productName;
 

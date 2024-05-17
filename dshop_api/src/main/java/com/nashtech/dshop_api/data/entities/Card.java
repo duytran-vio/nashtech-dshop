@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Card extends AuditEntity<Integer> {
+public class Card extends AuditEntity<Long> {
     @Column(name = "CARD_NUMBER", nullable = false)
     private String cardNumber;
 
