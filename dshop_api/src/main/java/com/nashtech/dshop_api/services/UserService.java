@@ -10,6 +10,6 @@ public interface UserService {
     // public User getUser(String username);
     public UserDto getUserById(Long id);
     public List<UserDto> getAllUsers();
-    // public void deleteUser(String username);
-    // public void updateUser(User user);
+    public void deleteUser(Long id);
+    // public UserInfoDto getUserInfo(Long userId);
 }

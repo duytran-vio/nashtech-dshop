@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.User;
+import com.nashtech.dshop_api.data.repositories.CustomerInfoRepository;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
@@ -20,7 +21,8 @@ public class UserServiceImpl implements UserService{
     private UserMapper mapper;
 
     
-    public UserServiceImpl(@Autowired UserRepository userRepository,@Autowired UserMapper mapper) {
+    public UserServiceImpl(@Autowired UserRepository userRepository, 
+                            @Autowired UserMapper mapper) {
         this.userRepository = userRepository;
         this.mapper = mapper;
     }
@@ -28,8 +30,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDto createUser(UserCreateRequest userDto) {
         User user = mapper.toEntity(userDto);
-        userRepository.save(user);
-        return mapper.toDto(user);
+        return mapper.toDto(userRepository.save(user));
     }
 
     @Override
@@ -45,5 +46,12 @@ public class UserServiceImpl implements UserService{
         return userRepository.findById(id)
                             .map(mapper::toDto)
                             .orElseThrow(() -> new UserNotFoundException());
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                                .orElseThrow(() -> new UserNotFoundException());
+        userRepository.delete(user);
     }
 }

@@ -2,6 +2,7 @@ package com.nashtech.dshop_api.data.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,7 +32,7 @@ public class User extends AuditEntity<Long>{
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "INFO_ID")
     private CustomerInfo info;
 
