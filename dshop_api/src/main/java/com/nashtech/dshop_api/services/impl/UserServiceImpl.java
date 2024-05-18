@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.User;
-import com.nashtech.dshop_api.data.repositories.CustomerInfoRepository;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
@@ -43,9 +42,8 @@ public class UserServiceImpl implements UserService{
 
     @Override 
     public UserDto getUserById(Long id) {
-        return userRepository.findById(id)
-                            .map(mapper::toDto)
-                            .orElseThrow(() -> new UserNotFoundException());
+        User user = this.getUserEntityById(id);
+        return mapper.toDto(user);
     }
 
     @Override
@@ -53,5 +51,11 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findById(id)
                                 .orElseThrow(() -> new UserNotFoundException());
         userRepository.delete(user);
+    }
+
+    @Override
+    public User getUserEntityById(Long id) {
+        return userRepository.findById(id)
+                            .orElseThrow(() -> new UserNotFoundException());
     }
 }

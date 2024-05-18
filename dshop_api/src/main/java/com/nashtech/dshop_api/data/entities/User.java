@@ -32,8 +32,7 @@ public class User extends AuditEntity<Long>{
     @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "INFO_ID")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private CustomerInfo info;
 
     @ManyToOne

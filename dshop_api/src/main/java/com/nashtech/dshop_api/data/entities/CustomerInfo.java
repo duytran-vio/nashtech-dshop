@@ -10,9 +10,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity 
 @Table(name = "CUSTOMER_INFO") 
+@Getter
+@Setter
 public class CustomerInfo extends AuditEntity<Long>{
 
     @Column(name = "FULLNAME")
@@ -25,7 +29,7 @@ public class CustomerInfo extends AuditEntity<Long>{
     @JoinColumn(name = "AVATAR_ID")
     private Image avatar;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ONLINE_STATUS_ID")
     private StatusType onlineStatus;
 
@@ -35,10 +39,11 @@ public class CustomerInfo extends AuditEntity<Long>{
     @Column(name = "DATE_OF_BIRTH")
     private LocalDateTime dateOfBirth;
 
+    @OneToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "CARD_ID")
     private Card card;
-
-    @OneToOne(mappedBy = "info")
-    private User user;
 }
