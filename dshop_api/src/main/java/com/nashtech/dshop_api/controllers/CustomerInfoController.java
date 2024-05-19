@@ -40,11 +40,11 @@ public class CustomerInfoController {
                             .body(result);
     }
 
-    @PatchMapping("/{userId}")
-    public ResponseEntity<Object> patchCustomerInfo(@PathVariable("userId") Long userId, 
-                                                    @Valid @RequestBody CustomerInfoDto customerInfoDto) {
-        CustomerInfoDto result = customerInfoService.patchCustomerInfo(userId, customerInfoDto);
-        return ResponseEntity.ok()
-                            .body(result);
-    }
+    // @PatchMapping("/{userId}")
+    // public ResponseEntity<Object> patchCustomerInfo(@PathVariable("userId") Long userId, 
+    //                                                 @Valid @RequestBody CustomerInfoDto customerInfoDto) {
+    //     CustomerInfoDto result = customerInfoService.patchCustomerInfo(userId, customerInfoDto);
+    //     return ResponseEntity.ok()
+    //                         .body(result);
+    // }
 }
