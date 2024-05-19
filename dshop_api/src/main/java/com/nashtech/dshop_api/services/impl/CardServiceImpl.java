@@ -7,7 +7,7 @@ import com.nashtech.dshop_api.data.entities.Card;
 import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.repositories.CardRepository;
 import com.nashtech.dshop_api.dto.responses.CustomerInfo.CardDto;
-import com.nashtech.dshop_api.exceptions.AlreadyExistResourceException.CardAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.CardAlreadyExistException;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.CardNotFoundException;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.UserNotFoundException;
 import com.nashtech.dshop_api.mappers.CardMapper;
@@ -54,7 +54,8 @@ public class CardServiceImpl implements CardService{
         }
         Card card = mapper.toEntity(cardDto);
         card.setUser(user);
-        return mapper.toDto(cardRepository.save(card));
+        card = cardRepository.save(card);
+        return mapper.toDto(card);
     }
 
     @Override

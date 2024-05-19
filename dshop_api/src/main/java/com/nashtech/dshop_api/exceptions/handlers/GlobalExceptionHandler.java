@@ -1,6 +1,8 @@
 package com.nashtech.dshop_api.exceptions.handlers;
 
 import java.util.stream.Collectors;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -43,6 +45,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleAlreadyExistException(ResourceAlreadyExistException ex) {
         var error = ErrorResponse.builder().code(HttpStatus.CONFLICT.value())
             .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+            var error = ErrorResponse.builder().code(HttpStatus.CONFLICT.value())
+                .message(ex.getCause().getCause().toString()).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
+        var error = ErrorResponse.builder().code(HttpStatus.CONFLICT.value())
+            .message(ex.getCause().toString()).build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }

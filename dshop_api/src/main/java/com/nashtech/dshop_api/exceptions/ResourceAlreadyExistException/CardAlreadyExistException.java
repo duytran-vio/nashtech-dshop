@@ -1,4 +1,4 @@
-package com.nashtech.dshop_api.exceptions.AlreadyExistResourceException;
+package com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
 
 public class CardAlreadyExistException extends ResourceAlreadyExistException{
     public CardAlreadyExistException(Long userId) {
