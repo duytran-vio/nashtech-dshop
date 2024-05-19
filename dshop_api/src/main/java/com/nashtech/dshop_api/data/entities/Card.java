@@ -4,15 +4,19 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "CARDS")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Card extends AuditEntity<Long> {
@@ -28,6 +32,7 @@ public class Card extends AuditEntity<Long> {
     @Column(name = "CVV", nullable = false)
     private String cvv;
 
-    @OneToOne(mappedBy = "card")
-    private CustomerInfo customerInfo;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 }

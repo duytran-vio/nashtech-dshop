@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -38,8 +36,4 @@ public class CustomerInfo extends AuditEntity<Long>{
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "CARD_ID")
-    private Card card;
 }

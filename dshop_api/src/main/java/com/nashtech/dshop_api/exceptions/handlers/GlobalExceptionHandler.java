@@ -13,7 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.nashtech.dshop_api.dto.responses.ErrorResponse;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.ResourceAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -36,5 +37,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var error = ErrorResponse.builder().code(HttpStatus.BAD_REQUEST.value())
             .message("Validation Error").errors(errors).build();
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    protected ResponseEntity<ErrorResponse> handleAlreadyExistException(ResourceAlreadyExistException ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.CONFLICT.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 }

@@ -51,4 +51,7 @@ public class User extends AuditEntity<Long>{
 
     @OneToMany(mappedBy = "customer")
     private List<Review> reviews;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private Card card;
 }

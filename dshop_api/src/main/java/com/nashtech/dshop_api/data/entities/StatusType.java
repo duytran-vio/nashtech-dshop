@@ -23,7 +23,7 @@ public class StatusType extends AuditEntity<Long>{
     private String statusName;
 
     @OneToMany(mappedBy = "onlineStatus")
-    private List<CustomerInfo> customerInfos;
+    private List<User> users;
 
     @OneToMany(mappedBy = "orderStatus")
     private List<Order> orders;

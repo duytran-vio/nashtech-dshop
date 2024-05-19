@@ -12,4 +12,5 @@ public interface UserService {
     public List<UserDto> getAllUsers();
     public void deleteUser(Long id);
     public User getUserEntityById(Long id);
+    public Boolean isUserExist(Long id);
 }

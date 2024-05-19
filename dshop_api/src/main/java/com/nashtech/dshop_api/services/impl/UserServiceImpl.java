@@ -9,7 +9,7 @@ import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
-import com.nashtech.dshop_api.exceptions.UserNotFoundException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.UserNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
 import com.nashtech.dshop_api.services.UserService;
 
@@ -49,13 +49,18 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
-                                .orElseThrow(() -> new UserNotFoundException());
+                                .orElseThrow(() -> new UserNotFoundException(id));
         userRepository.delete(user);
     }
 
     @Override
     public User getUserEntityById(Long id) {
         return userRepository.findById(id)
-                            .orElseThrow(() -> new UserNotFoundException());
+                            .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @Override
+    public Boolean isUserExist(Long id) {
+        return userRepository.existsById(id);
     }
 }
