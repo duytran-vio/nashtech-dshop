@@ -29,7 +29,7 @@ public class User extends AuditEntity<Long>{
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "EMAIL", nullable = false, unique = true)
+    @Column(name = "EMAIL", nullable = true, unique = true)
     private String email;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -38,6 +38,10 @@ public class User extends AuditEntity<Long>{
     @ManyToOne
     @JoinColumn(name = "ROLE_ID")
     private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "ONLINE_STATUS_ID")
+    private StatusType onlineStatus;
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;

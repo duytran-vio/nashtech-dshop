@@ -29,10 +29,6 @@ public class CustomerInfo extends AuditEntity<Long>{
     @JoinColumn(name = "AVATAR_ID")
     private Image avatar;
 
-    @ManyToOne
-    @JoinColumn(name = "ONLINE_STATUS_ID")
-    private StatusType onlineStatus;
-
     @Column(name = "ADDRESS")
     private String address;
 
