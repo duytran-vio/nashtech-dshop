@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -28,9 +29,9 @@ public class Category extends AuditEntity<Long> {
     private List<Product> products;
 
     @Column(name = "LAYER_NUM")
-    private Integer layerNum;
+    private Long layerNum;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     private Category parentCategory;
 
