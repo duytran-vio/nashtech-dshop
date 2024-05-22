@@ -9,10 +9,12 @@ import com.nashtech.dshop_api.data.entities.Category;
 import com.nashtech.dshop_api.data.repositories.CategoryRepository;
 import com.nashtech.dshop_api.dto.requests.CategoryCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.responses.CategoryDto;
-import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.CategoryAlreadyExistException;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.CategoryNotFoundException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.CategoryMapper;
 import com.nashtech.dshop_api.services.CategoryService;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -38,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     public Category getCategoryEntityById(Long id) {
         return categoryRepository.findById(id)
-                                .orElseThrow(() -> new CategoryNotFoundException(id));
+                                .orElseThrow(() -> new ResourceNotFoundException(Category.class.getName(), "id", id));
     }
 
     @Override
@@ -62,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public CategoryDto createCategory(CategoryCreateUpdateRequest categoryRequest) {
         if (categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new CategoryAlreadyExistException(categoryRequest.getCategoryName());
+            throw new ResourceAlreadyExistException(Category.class.getName(), "category name", categoryRequest.getCategoryName());
         }
 
         Category category = mapper.toEntityFromRequest(categoryRequest);
@@ -77,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = getCategoryEntityById(id);
 
         if (!category.getCategoryName().equals(categoryRequest.getCategoryName())  && categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new CategoryAlreadyExistException(categoryRequest.getCategoryName());
+            throw new ResourceAlreadyExistException(Category.class.getName(), "category name", categoryRequest.getCategoryName());
         }
 
         category = mapper.updateEntityFromRequest(categoryRequest, category);
