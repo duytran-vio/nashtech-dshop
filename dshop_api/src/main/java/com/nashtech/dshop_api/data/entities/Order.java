@@ -16,24 +16,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ORDERS")
+@Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order extends AuditEntity<Long> {
-    @Column(name = "TOTAL", nullable = false)
+    @Column(name = "total", nullable = false)
     private double total;
 
-    @Column(name = "CREATE_AT", nullable = false)
-    private String createAt;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "CUSTOMER_ID")
+    @JoinColumn(name = "customer_id")
     private User customer;
 
     @ManyToOne
-    @JoinColumn(name = "ORDER_STATUS_ID")
+    @JoinColumn(name = "order_status_id")
     private StatusType orderStatus;
 
     @OneToMany(mappedBy = "order")

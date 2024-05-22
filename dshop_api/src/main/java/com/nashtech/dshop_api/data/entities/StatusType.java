@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "STATUS_TYPES")
+@Table(name = "status_types")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatusType extends AuditEntity<Long>{
 
-    @Column(name = "STATUS_NAME", unique = true)
+    @Column(name = "status_name", unique = true)
     private String statusName;
 
     @OneToMany(mappedBy = "onlineStatus")

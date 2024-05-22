@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "CART_ITEMS")
+@Table(name = "cart_items")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItem extends AuditEntity<Long> {
-    @Column(name = "QUANTITY", nullable = false)
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "CART_ID")
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "product_id")
     private Product product;
 }

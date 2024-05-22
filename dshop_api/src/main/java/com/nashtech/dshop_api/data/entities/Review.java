@@ -11,23 +11,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "REVIEWS")
+@Table(name = "reviews")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review extends AuditEntity<Long> {
-    @Column(name = "RATING", nullable = false)
+    @Column(name = "rating", nullable = false)
     private int rating;
 
-    @Column(name = "CONTENT", nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "ORDER_ITEM_ID")
+    @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
 
     @ManyToOne
-    @JoinColumn(name = "CUSTOMER_ID")
+    @JoinColumn(name = "customer_id")
     private User customer;
 }

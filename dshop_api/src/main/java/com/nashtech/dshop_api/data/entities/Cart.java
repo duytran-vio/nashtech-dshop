@@ -13,14 +13,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "CARTS")
+@Table(name = "carts")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cart extends AuditEntity<Long> {
     @OneToOne
-    @JoinColumn(name = "CUSTOMER_ID")
+    @JoinColumn(name = "customer_id")
     private User customer;
 
     @OneToMany(mappedBy = "cart")

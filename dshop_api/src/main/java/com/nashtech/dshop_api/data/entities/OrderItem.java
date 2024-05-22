@@ -14,24 +14,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ORDER_ITEMS")
+@Table(name = "order_items")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItem extends AuditEntity<Long> {
-    @Column(name = "QUANTITY", nullable = false)
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    @Column(name = "UNIT_PRICE", nullable = false)
+    @Column(name = "unit_price", nullable = false)
     private double unitPrice;
 
     @ManyToOne
-    @JoinColumn(name = "ORDER_ID")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @OneToMany(mappedBy = "orderItem")

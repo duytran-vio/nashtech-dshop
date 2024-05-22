@@ -16,27 +16,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "CATEGORIES")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category extends AuditEntity<Long> {
-    @Column(name = "CATEGORY_NAME", nullable = false, unique = true)
+    @Column(name = "category_name", nullable = false, unique = true)
     private String categoryName;
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
-    @Column(name = "LAYER_NUM")
+    @Column(name = "layer_num")
     private Long layerNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID")
+    @JoinColumn(name = "parent_id")
     private Category parentCategory;
 
     @OneToOne
-    @JoinColumn(name = "IMAGE_ID")
+    @JoinColumn(name = "image_id")
     private Image image;
 
     @OneToMany(mappedBy = "parentCategory")

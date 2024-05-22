@@ -15,43 +15,43 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "PRODUCTS")
+@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product extends AuditEntity<Long> {
-    @Column(name = "PRODUCT_NAME", nullable = false)
+    @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "REVIEW_NUM", nullable = false)
-    private Integer reviewNum;
+    @Column(name = "review_num", nullable = false)
+    private Long reviewNum;
 
-    @Column(name = "AVG_RATING", nullable = false)
+    @Column(name = "avg_rating", nullable = false)
     private Float avgRating;
 
-    @Column(name = "SOLD_NUM", nullable = false)
-    private Integer soldNum;
+    @Column(name = "sold_num", nullable = false)
+    private Long soldNum;
 
-    @Column(name = "PRICE", nullable = false)
+    @Column(name = "price", nullable = false)
     private Float price;
 
-    @Column(name = "STOCK", nullable = false)
-    private Integer stock;
+    @Column(name = "stock", nullable = false)
+    private Long stock;
 
     @ManyToOne
-    @JoinColumn(name = "STATUS_ID")
+    @JoinColumn(name = "status_id")
     private StatusType status;
 
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "CREATE_USER_ID")
+    @JoinColumn(name = "create_user_id")
     private User createUser;
 
     @OneToMany(mappedBy = "product")

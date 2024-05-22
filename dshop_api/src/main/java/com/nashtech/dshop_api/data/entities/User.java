@@ -17,30 +17,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends AuditEntity<Long>{
-    @Column(name = "USERNAME", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "EMAIL", nullable = true, unique = true)
+    @Column(name = "email", nullable = true, unique = true)
     private String email;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private CustomerInfo info;
 
     @ManyToOne
-    @JoinColumn(name = "ROLE_ID")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "ONLINE_STATUS_ID")
+    @JoinColumn(name = "online_status_id")
     private StatusType onlineStatus;
 
     @OneToMany(mappedBy = "customer")

@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ROLES")
+@Table(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role extends AuditEntity<Long> {
-    @Column(name = "ROLE_NAME", nullable = false, unique = true)
+    @Column(name = "role_name", nullable = false, unique = true)
     private String roleName;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)

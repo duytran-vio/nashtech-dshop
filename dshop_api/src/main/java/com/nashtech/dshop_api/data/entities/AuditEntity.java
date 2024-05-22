@@ -20,11 +20,11 @@ import lombok.NoArgsConstructor;
 @Getter
 public abstract class AuditEntity<P extends Serializable> extends IdEntity<P> {
 
-    @Column(name = "DATE_CREATED")
+    @Column(name = "date_created")
     @CreatedDate
     LocalDateTime dateCreated;
 
-    @Column(name = "DATE_MODIFIED")
+    @Column(name = "date_modified")
     @LastModifiedDate
     LocalDateTime dateModified;
 

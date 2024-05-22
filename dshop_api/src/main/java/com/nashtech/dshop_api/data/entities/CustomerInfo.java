@@ -12,28 +12,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity 
-@Table(name = "CUSTOMER_INFO") 
+@Table(name = "customer_info") 
 @Getter
 @Setter
 public class CustomerInfo extends AuditEntity<Long>{
 
-    @Column(name = "FULLNAME")
+    @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "PHONE")
+    @Column(name = "phone")
     private String phone;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "AVATAR_ID")
+    @JoinColumn(name = "avatar_id")
     private Image avatar;
 
-    @Column(name = "ADDRESS")
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "DATE_OF_BIRTH")
+    @Column(name = "date_of_birth")
     private LocalDateTime dateOfBirth;
 
     @OneToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_id")
     private User user;
 }
