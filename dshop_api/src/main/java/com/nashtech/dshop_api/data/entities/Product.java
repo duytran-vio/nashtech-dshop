@@ -53,6 +53,9 @@ public class Product extends AuditEntity<Long> {
     @JoinColumn(name = "create_user_id")
     private User createUser;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
     @OneToMany(mappedBy = "product")
     private List<OrderItem> orderItems;
 
