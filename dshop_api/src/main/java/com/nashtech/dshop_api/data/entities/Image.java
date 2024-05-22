@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "IMAGES")
+@Table(name = "images")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image extends AuditEntity<Long> {
-    @Column(name = "IMAGE_URL", nullable = false)
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     @OneToOne(mappedBy = "avatar")
