@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     public Category getCategoryEntityById(Long id) {
         return categoryRepository.findById(id)
-                                .orElseThrow(() -> new ResourceNotFoundException(Category.class.getName(), "id", id));
+                                .orElseThrow(() -> new ResourceNotFoundException(Category.class.getSimpleName(), "id", id));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public CategoryDto createCategory(CategoryCreateUpdateRequest categoryRequest) {
         if (categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new ResourceAlreadyExistException(Category.class.getName(), "category name", categoryRequest.getCategoryName());
+            throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name", categoryRequest.getCategoryName());
         }
 
         Category category = mapper.toEntityFromRequest(categoryRequest);
@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = getCategoryEntityById(id);
 
         if (!category.getCategoryName().equals(categoryRequest.getCategoryName())  && categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new ResourceAlreadyExistException(Category.class.getName(), "category name", categoryRequest.getCategoryName());
+            throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name", categoryRequest.getCategoryName());
         }
 
         category = mapper.updateEntityFromRequest(categoryRequest, category);

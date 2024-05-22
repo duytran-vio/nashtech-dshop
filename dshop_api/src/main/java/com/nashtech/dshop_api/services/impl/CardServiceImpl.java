@@ -33,9 +33,9 @@ public class CardServiceImpl implements CardService{
         return cardRepository.findByUserId(userId)
                                 .orElseThrow(() -> {
                                     if (!userService.isUserExist(userId)) {
-                                        return new ResourceNotFoundException(User.class.getName(), "id", userId);
+                                        return new ResourceNotFoundException(User.class.getSimpleName(), "id", userId);
                                     }
-                                    return new ResourceNotFoundException(Card.class.getName(), "userId", userId);
+                                    return new ResourceNotFoundException(Card.class.getSimpleName(), "userId", userId);
                                 });
     }
 
@@ -48,7 +48,7 @@ public class CardServiceImpl implements CardService{
     @Override
     public CardDto addCard(Long userId, CardDto cardDto) {
         if (cardRepository.findByUserId(userId).isPresent()) {
-            throw new ResourceAlreadyExistException(Card.class.getName(), "userId", userId);
+            throw new ResourceAlreadyExistException(Card.class.getSimpleName(), "userId", userId);
         }
         User user = userService.getUserEntityById(userId);
         Card card = mapper.toEntity(cardDto);
