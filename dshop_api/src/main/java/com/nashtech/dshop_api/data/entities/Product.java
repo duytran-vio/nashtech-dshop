@@ -42,8 +42,7 @@ public class Product extends AuditEntity<Long> {
     @Column(name = "stock", nullable = false)
     private Long stock;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
+    @Column(name = "status_id")
     private StatusType status;
 
     @ManyToOne

@@ -39,8 +39,7 @@ public class User extends AuditEntity<Long>{
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @ManyToOne
-    @JoinColumn(name = "online_status_id")
+    @Column(name = "online_status_id")
     private StatusType onlineStatus;
 
     @OneToMany(mappedBy = "customer")

@@ -30,8 +30,7 @@ public class Order extends AuditEntity<Long> {
     @JoinColumn(name = "customer_id")
     private User customer;
 
-    @ManyToOne
-    @JoinColumn(name = "order_status_id")
+    @Column(name = "order_status_id")
     private StatusType orderStatus;
 
     @OneToMany(mappedBy = "order")
