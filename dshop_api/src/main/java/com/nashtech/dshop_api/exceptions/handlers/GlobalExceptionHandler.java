@@ -15,8 +15,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.nashtech.dshop_api.dto.responses.ErrorResponse;
-import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.ResourceAlreadyExistException;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.ResourceNotFoundException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
