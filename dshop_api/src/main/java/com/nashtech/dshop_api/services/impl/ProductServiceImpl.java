@@ -22,6 +22,8 @@ import com.nashtech.dshop_api.services.UserService;
 
 @Service
 public class ProductServiceImpl implements ProductService{
+
+    static final String STOCK_EXCEPTION_MESSAGE = "Stock must be greater than or equal to current stock";
     
     private ProductRepository productRepository;
     private ProductMapper mapper;
@@ -41,7 +43,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductElementDto> getAllProducts() {
-        var products = productRepository.findAll()
+        var products = productRepository.findAllByIsDeletedFalse()
                                         .stream()
                                         .map(mapper::toProductElementDto)
                                         .toList();
@@ -49,7 +51,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     public Product getProductEntityById(Long id) {
-        return productRepository.findById(id)
+        return productRepository.findByIdAndIsDeletedFalse(id)
                                 .orElseThrow(() -> new ResourceNotFoundException(Product.class.getSimpleName(), "id", id));
     }
 
@@ -61,7 +63,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductDetailDto createProduct(ProductCreateUpdateRequest productCreateRequest) {
-        if (productRepository.existsByProductName(productCreateRequest.getProductName())) {
+        if (productRepository.existsByProductNameAndIsDeletedFalse(productCreateRequest.getProductName())) {
             throw new ResourceAlreadyExistException(Product.class.getSimpleName(), 
                                                     "product name", 
                                                     productCreateRequest.getProductName());
@@ -77,6 +79,40 @@ public class ProductServiceImpl implements ProductService{
         return mapper.toProductDetailDto(product);
     }
 
-    
+    @Override
+    public ProductDetailDto updateProduct(Long id, ProductCreateUpdateRequest productUpdateRequest) {
+        var product = this.getProductEntityById(id);
+        if (!product.getProductName().equals(productUpdateRequest.getProductName()) 
+            && productRepository.existsByProductNameAndIsDeletedFalse(productUpdateRequest.getProductName())) {
+            throw new ResourceAlreadyExistException(Product.class.getSimpleName(), 
+                                                    "product name", 
+                                                    productUpdateRequest.getProductName());
+        }
+
+
+        if (productUpdateRequest.getStock() < product.getStock()){
+            throw new IllegalArgumentException(STOCK_EXCEPTION_MESSAGE);
+        }
+        else{
+            product.setStock(productUpdateRequest.getStock());
+        }
+
+        if (productUpdateRequest.getCategoryId() != null 
+            && product.getCategory().getId() != productUpdateRequest.getCategoryId()) {
+            Category category = categoryService.getCategoryEntityById(productUpdateRequest.getCategoryId());
+            product.setCategory(category);
+        }
+
+        mapper.toEntityFromUpdateRequest(product, productUpdateRequest);
+        product = productRepository.save(product);
+        return mapper.toProductDetailDto(product);
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        var product = this.getProductEntityById(id);
+        product.setIsDeleted(true);
+        productRepository.save(product);
+    }
 
 }

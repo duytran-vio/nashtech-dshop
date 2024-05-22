@@ -1,5 +1,7 @@
 package com.nashtech.dshop_api.dto.responses.Product;
 
+import com.nashtech.dshop_api.data.entities.StatusType;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,4 +17,6 @@ public class ProductDetailDto {
     private Long soldNum;
     private Float price;
     private Long stock;
+    private Long categoryId;
+    private StatusType status;
 }

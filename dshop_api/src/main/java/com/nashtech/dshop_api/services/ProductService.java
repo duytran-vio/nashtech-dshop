@@ -10,5 +10,6 @@ public interface ProductService {
     public List<ProductElementDto> getAllProducts();
     public ProductDetailDto getProductById(Long id);
     public ProductDetailDto createProduct(ProductCreateUpdateRequest productCreateRequest);
-    // public ProductDetailDto updateProduct(Long id, ProductUpdateRequest productUpdateRequest);
+    public ProductDetailDto updateProduct(Long id, ProductCreateUpdateRequest productUpdateRequest);
+    public void deleteProduct(Long id);
 }
