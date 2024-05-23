@@ -75,16 +75,20 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public CategoryDto updateCategory(Long id, CategoryCreateUpdateRequest categoryRequest) { 
+    public CategoryDto updateCategory(Long id, CategoryCreateUpdateRequest categoryRequest) {
         Category category = getCategoryEntityById(id);
 
-        if (!category.getCategoryName().equals(categoryRequest.getCategoryName())  && categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name", categoryRequest.getCategoryName());
+        if (!category.getCategoryName().equals(categoryRequest.getCategoryName())
+                && categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
+            throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name",
+                    categoryRequest.getCategoryName());
         }
 
         category = mapper.updateEntityFromRequest(categoryRequest, category);
 
-        if (categoryRequest.getParentId() != category.getParentCategory().getId()){
+        if ((category.getParentCategory() != null
+                && categoryRequest.getParentId() != category.getParentCategory().getId())
+                || (category.getParentCategory() == null && categoryRequest.getParentId() != null)) {
             updateParentCategory(category, categoryRequest.getParentId());
         }
 
