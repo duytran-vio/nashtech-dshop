@@ -18,6 +18,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CardDto {
+
+    private Long id;
+    
     @NotBlank
     @Digits(integer = 16, fraction = 0, message = "Card number is invalid")
     private String cardNumber;
