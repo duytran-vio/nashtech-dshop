@@ -13,15 +13,15 @@ import com.nashtech.dshop_api.services.UserService;
 @Service
 public class CustomerInfoServiceImpl implements CustomerInfoService{
 
-    private CustomerInfoRepository customerRepository;
+    private CustomerInfoRepository customerInfoRepository;
     private CustomerInfoMapper mapper;
     private UserService userService;
     
     @Autowired
-    public CustomerInfoServiceImpl(CustomerInfoRepository customerRepository, 
+    public CustomerInfoServiceImpl(CustomerInfoRepository customerInfoRepository, 
                                     UserService userService,
                                     CustomerInfoMapper mapper) {
-        this.customerRepository = customerRepository;
+        this.customerInfoRepository = customerInfoRepository;
         this.userService = userService;
         this.mapper = mapper;
     }
@@ -30,11 +30,11 @@ public class CustomerInfoServiceImpl implements CustomerInfoService{
         var user = userService.getUserEntityById(userId);
         CustomerInfo customerInfo = new CustomerInfo();
         customerInfo.setUser(user);
-        return customerRepository.save(customerInfo);
+        return customerInfoRepository.save(customerInfo);
     }
 
     public CustomerInfo getCustomerInfoEntity(Long userId){   
-        var customerInfo = customerRepository.findByUserId(userId)
+        var customerInfo = customerInfoRepository.findByUserId(userId)
                                              .orElseGet(() -> this.createCustomerInfo(userId));
         return customerInfo;
     }
@@ -49,13 +49,13 @@ public class CustomerInfoServiceImpl implements CustomerInfoService{
     public CustomerInfoDto putCustomerInfo(Long userId, CustomerInfoDto customerInfoDto) {
         CustomerInfo customerInfo = getCustomerInfoEntity(userId);
         mapper.putEntityFromDto(customerInfoDto, customerInfo);
-        return mapper.toDto(customerRepository.save(customerInfo));
+        return mapper.toDto(customerInfoRepository.save(customerInfo));
     }
 
-    @Override
-    public CustomerInfoDto patchCustomerInfo(Long userId, CustomerInfoDto customerInfoDto) {
-        CustomerInfo customerInfo = getCustomerInfoEntity(userId);
-        mapper.patchEntityFromDto(customerInfoDto, customerInfo);
-        return mapper.toDto(customerRepository.save(customerInfo));
-    }
+    // @Override
+    // public CustomerInfoDto patchCustomerInfo(Long userId, CustomerInfoDto customerInfoDto) {
+    //     CustomerInfo customerInfo = getCustomerInfoEntity(userId);
+    //     mapper.patchEntityFromDto(customerInfoDto, customerInfo);
+    //     return mapper.toDto(customerInfoRepository.save(customerInfo));
+    // }
 }
