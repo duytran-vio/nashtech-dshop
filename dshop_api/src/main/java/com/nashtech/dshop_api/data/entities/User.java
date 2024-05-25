@@ -42,13 +42,7 @@ public class User extends AuditEntity<Long>{
     @Column(name = "online_status_id")
     private StatusType onlineStatus;
 
-    @OneToMany(mappedBy = "customer")
-    private List<Order> orders;
-
-    @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY)
-    private Cart cart;
-
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)

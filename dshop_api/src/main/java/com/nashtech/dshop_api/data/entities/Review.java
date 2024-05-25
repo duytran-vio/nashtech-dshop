@@ -18,16 +18,16 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Review extends AuditEntity<Long> {
     @Column(name = "rating", nullable = false)
-    private int rating;
+    private Long rating;
 
     @Column(name = "content", nullable = false)
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "order_item_id")
-    private OrderItem orderItem;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private User customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

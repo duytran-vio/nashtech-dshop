@@ -56,9 +56,9 @@ public class Product extends AuditEntity<Long> {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @OneToMany(mappedBy = "product")
-    private List<OrderItem> orderItems;
+    @Column(name = "is_featured")
+    private Boolean isFeatured;
 
     @OneToMany(mappedBy = "product")
-    private List<CartItem> cartItems;
+    private List<Review> reviews;
 }
