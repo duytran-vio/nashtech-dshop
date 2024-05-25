@@ -1,6 +1,7 @@
 package com.nashtech.dshop_api.dto.requests.Product;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,18 +18,19 @@ public class ProductCreateUpdateRequest {
     private String productName;
     private String description;
 
-    // @NotBlank(message = "Product price is required")
+    @NotNull
     @Positive(message = "Product price must be a positive number")
     private Float price;
 
+    @NotNull
     @Positive(message = "Product stock must be a positive number")
     private Long stock;
 
-    // @NotBlank(message = "Product category is required")
     private Long categoryId;
 
     private String status;
 
-    // @NotBlank(message = "Product create user id is required")
+    private Boolean isFeatured;
+
     private Long createUserId;
 }

@@ -19,4 +19,5 @@ public class ProductDetailDto {
     private Long stock;
     private Long categoryId;
     private StatusType status;
+    private Boolean isFeatured;
 }

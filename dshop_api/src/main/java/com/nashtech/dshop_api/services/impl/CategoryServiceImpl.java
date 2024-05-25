@@ -14,7 +14,6 @@ import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.CategoryMapper;
 import com.nashtech.dshop_api.services.CategoryService;
 
-import jakarta.annotation.Resource;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{

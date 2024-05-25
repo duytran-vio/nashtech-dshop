@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
+import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
 import com.nashtech.dshop_api.services.ProductService;
 
 import jakarta.validation.Valid;
@@ -29,8 +30,8 @@ public class ProductController extends BaseController{
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllProducts() {
-        var products = productService.getAllProducts();
+    public ResponseEntity<Object> getAllProductsByCriterion(@Valid ProductGetRequest productGetRequest){
+        var products = productService.getAllProductsByCriterion(productGetRequest);
         return ResponseEntity.ok()
                             .body(products);
     }

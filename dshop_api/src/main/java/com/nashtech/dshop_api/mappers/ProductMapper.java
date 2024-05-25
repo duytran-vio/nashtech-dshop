@@ -23,6 +23,7 @@ public abstract class ProductMapper {
     @Mapping(target = "avgRating", constant = "0f")
     @Mapping(target = "soldNum", constant = "0L")
     @Mapping(target = "isDeleted", constant = "false")
+    @Mapping(target = "isFeatured", source = "isFeatured", defaultValue = "false")
     @Mapping(target = "status", source = "status", defaultValue = "ACTIVE")
     public abstract Product toEntityFromCreateRequest(ProductCreateUpdateRequest productCreateRequest);
 

@@ -3,13 +3,18 @@ package com.nashtech.dshop_api.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.Category;
+import com.nashtech.dshop_api.data.entities.Category_;
 import com.nashtech.dshop_api.data.entities.Product;
+import com.nashtech.dshop_api.data.entities.Product_;
+import com.nashtech.dshop_api.data.entities.StatusType;
 import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.repositories.ProductRepository;
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
+import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
 import com.nashtech.dshop_api.dto.responses.Product.ProductDetailDto;
 import com.nashtech.dshop_api.dto.responses.Product.ProductElementDto;
 import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
@@ -29,6 +34,26 @@ public class ProductServiceImpl implements ProductService{
     private ProductMapper mapper;
     private CategoryService categoryService;
     private UserService userService;
+
+    public static Specification<Product> likeName(String name) {
+        return (root, query, builder) -> builder.like(root.get(Product_.productName), "%" + name + "%");
+    }
+
+    public static Specification<Product> hasCategory(Long categoryId) {
+        return (root, query, builder) -> builder.equal(root.get(Product_.CATEGORY).get(Category_.ID), categoryId);
+    }
+
+    public static Specification<Product> hasStatusType(StatusType status) {
+        return (root, query, builder) -> builder.equal(root.get(Product_.status), status);
+    }
+
+    public static Specification<Product> isFeatured(Boolean isFeatured) {
+        return (root, query, builder) -> builder.equal(root.get(Product_.isFeatured), isFeatured);
+    }
+
+    public static Specification<Product> isDeletedFalse(){
+        return (root, query, builder) -> builder.isFalse(root.get(Product_.isDeleted));
+    }
     
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository, 
@@ -42,8 +67,26 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductElementDto> getAllProducts() {
-        var products = productRepository.findAllByIsDeletedFalse()
+    public List<ProductElementDto> getAllProductsByCriterion(ProductGetRequest productGetRequest) {
+
+        Specification<Product> spec = Specification.where(isDeletedFalse());
+        if (productGetRequest.getProductName() != null) {
+            spec = spec.and(likeName(productGetRequest.getProductName()));
+        }
+
+        if (productGetRequest.getCategoryId() != null) {
+            spec = spec.and(hasCategory(productGetRequest.getCategoryId()));
+        }
+
+        if (productGetRequest.getStatus() != null) {
+            spec = spec.and(hasStatusType(productGetRequest.getStatus()));
+        }
+
+        if (productGetRequest.getIsFeatured() != null) {
+            spec = spec.and(isFeatured(productGetRequest.getIsFeatured()));
+        }
+
+        var products = productRepository.findAll(spec)
                                         .stream()
                                         .map(mapper::toProductElementDto)
                                         .toList();
@@ -113,6 +156,11 @@ public class ProductServiceImpl implements ProductService{
         var product = this.getProductEntityById(id);
         product.setIsDeleted(true);
         productRepository.save(product);
+    }
+
+    @Override
+    public boolean isProductExist(Long id) {
+        return productRepository.existsByIdAndIsDeletedFalse(id);
     }
 
 }
