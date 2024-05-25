@@ -163,4 +163,12 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.existsByIdAndIsDeletedFalse(id);
     }
 
+    @Override 
+    public void updateNewReviewRating(Product product, Long rating){
+        var newRating = (product.getAvgRating() * product.getReviewNum() + rating) / (product.getReviewNum() + 1);
+        product.setAvgRating(newRating);
+        product.setReviewNum(product.getReviewNum() + 1);
+        productRepository.save(product);
+    }
+
 }

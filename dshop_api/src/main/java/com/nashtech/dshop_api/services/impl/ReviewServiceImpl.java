@@ -3,14 +3,18 @@ package com.nashtech.dshop_api.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.Product;
+import com.nashtech.dshop_api.data.entities.Product_;
 import com.nashtech.dshop_api.data.entities.Review;
+import com.nashtech.dshop_api.data.entities.Review_;
 import com.nashtech.dshop_api.data.entities.User;
+import com.nashtech.dshop_api.data.entities.User_;
 import com.nashtech.dshop_api.data.repositories.ReviewRepository;
+import com.nashtech.dshop_api.dto.requests.ReviewGetRequest;
 import com.nashtech.dshop_api.dto.responses.ReviewDto;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.ReviewMapper;
 import com.nashtech.dshop_api.services.ProductService;
 import com.nashtech.dshop_api.services.ReviewService;
@@ -23,6 +27,18 @@ public class ReviewServiceImpl implements ReviewService{
     private ReviewMapper mapper;
     private UserService userService;
     private ProductService productService;
+
+    public static Specification<Review> belongProductId(Long productId) {
+        return (root, query, builder) -> builder.equal(root.get(Review_.PRODUCT).get(Product_.ID), productId);
+    }
+
+    public static Specification<Review> belongUserId(Long userId) {
+        return (root, query, builder) -> builder.equal(root.get(Review_.USER).get(User_.ID), userId);
+    }
+
+    public static Specification<Review> hasRating(Long rating) {
+        return (root, query, builder) -> builder.equal(root.get(Review_.rating), rating);
+    }
 
     @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository, 
@@ -43,36 +59,29 @@ public class ReviewServiceImpl implements ReviewService{
         Review review = mapper.toEntity(reviewDto);
         review.setUser(user);
         review.setProduct(product);
+
+        productService.updateNewReviewRating(product, review.getRating());
+
         return mapper.toDto(reviewRepository.save(review));
     }
 
     @Override
-    public List<ReviewDto> getReviewsByProductId(Long productId) {
-        if (!productService.isProductExist(productId)) {
-            throw new ResourceNotFoundException(Product.class.getSimpleName(), "id", productId);
-        }
-        var reviews = reviewRepository.findAllByProductId(productId)
-                                        .stream()
-                                        .map(mapper::toDto)
-                                        .toList();
-        return reviews;
-    }
+    public List<ReviewDto> getReviewsByCriterion(ReviewGetRequest reviewGetRequest) {
+        Specification<Review> spec = Specification.where(null);
 
-    @Override
-    public List<ReviewDto> getReviewsByUserId(Long userId) {
-        if (!userService.isUserExist(userId)) {
-            throw new ResourceNotFoundException(User.class.getSimpleName(), "id", userId);
+        if (reviewGetRequest.getProductId() != null) {
+            spec = spec.and(belongProductId(reviewGetRequest.getProductId()));
         }
-        var reviews = reviewRepository.findAllByUserId(userId)
-                                        .stream()
-                                        .map(mapper::toDto)
-                                        .toList();
-        return reviews;
-    }
 
-    @Override
-    public List<ReviewDto> getAllReviews() {
-        var reviews = reviewRepository.findAll()
+        if (reviewGetRequest.getUserId() != null) {
+            spec = spec.and(belongUserId(reviewGetRequest.getUserId()));
+        }
+
+        if (reviewGetRequest.getRating() != null) {
+            spec = spec.and(hasRating(reviewGetRequest.getRating()));
+        }
+
+        var reviews = reviewRepository.findAll(spec)
                                         .stream()
                                         .map(mapper::toDto)
                                         .toList();

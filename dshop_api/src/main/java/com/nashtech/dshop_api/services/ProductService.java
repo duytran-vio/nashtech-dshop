@@ -16,4 +16,5 @@ public interface ProductService {
     public void deleteProduct(Long id);
     public Product getProductEntityById(Long id);
     public boolean isProductExist(Long id);
+    public void updateNewReviewRating(Product product, Long rating);
 }

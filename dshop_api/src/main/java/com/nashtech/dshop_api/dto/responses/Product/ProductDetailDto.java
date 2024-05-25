@@ -13,6 +13,7 @@ public class ProductDetailDto {
     private Long id;
     private String productName;
     private String description;
+    private Float avgRating;
     private Long reviewNum;
     private Long soldNum;
     private Float price;
