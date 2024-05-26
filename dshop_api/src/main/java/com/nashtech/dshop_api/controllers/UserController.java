@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
+import com.nashtech.dshop_api.dto.requests.User.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.services.UserService;
 import com.nashtech.dshop_api.utils.Constant;

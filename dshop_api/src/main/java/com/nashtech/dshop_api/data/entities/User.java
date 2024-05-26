@@ -1,6 +1,11 @@
 package com.nashtech.dshop_api.data.entities;
 
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,7 +27,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends AuditEntity<Long>{
+public class User extends AuditEntity<Long> implements UserDetails{
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
@@ -47,4 +52,29 @@ public class User extends AuditEntity<Long>{
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Card card;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.role.getRoleName()));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
