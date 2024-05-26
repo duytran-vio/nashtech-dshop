@@ -1,6 +1,8 @@
 package com.nashtech.dshop_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
+import com.nashtech.dshop_api.dto.responses.Product.ProductElementDto;
 import com.nashtech.dshop_api.services.ProductService;
 
 import jakarta.validation.Valid;
@@ -30,10 +33,10 @@ public class ProductController extends BaseController{
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllProductsByCriterion(@Valid ProductGetRequest productGetRequest){
-        var products = productService.getAllProductsByCriterion(productGetRequest);
+    public ResponseEntity<Object> getAllProductsByCriterion(@Valid ProductGetRequest productGetRequest, Pageable pageable){
+        Page<ProductElementDto> productPage = productService.getAllProductsByCriterion(productGetRequest, pageable);
         return ResponseEntity.ok()
-                            .body(products);
+                            .body(productPage);
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,8 @@ package com.nashtech.dshop_api.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +69,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductElementDto> getAllProductsByCriterion(ProductGetRequest productGetRequest) {
+    public Page<ProductElementDto> getAllProductsByCriterion(ProductGetRequest productGetRequest, Pageable pageable) {
 
         Specification<Product> spec = Specification.where(isDeletedFalse());
         if (productGetRequest.getProductName() != null) {
@@ -86,10 +88,8 @@ public class ProductServiceImpl implements ProductService{
             spec = spec.and(isFeatured(productGetRequest.getIsFeatured()));
         }
 
-        var products = productRepository.findAll(spec)
-                                        .stream()
-                                        .map(mapper::toProductElementDto)
-                                        .toList();
+        var products = productRepository.findAll(spec, pageable)
+                                        .map(mapper::toProductElementDto);
         return products;
     }
 
