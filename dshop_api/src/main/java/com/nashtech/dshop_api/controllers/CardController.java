@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.dshop_api.dto.responses.CustomerInfo.CardDto;
 import com.nashtech.dshop_api.services.CardService;
+import com.nashtech.dshop_api.utils.Constant;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/card")
-public class CardController extends BaseController {
+public class CardController{
     
     private final CardService cardService;
 
@@ -44,7 +45,7 @@ public class CardController extends BaseController {
     public ResponseEntity<Object> deleteCard(@PathVariable("userId") Long userId) {
         cardService.deleteCard(userId);
         return ResponseEntity.ok()
-                            .body(DELETE_SUCCESS_MSG);
+                            .body(Constant.DELETE_SUCCESS_MSG);
     }
 
     @PutMapping("/{userId}")

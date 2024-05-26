@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.services.UserService;
+import com.nashtech.dshop_api.utils.Constant;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController extends BaseController{
+public class UserController{
     private final UserService userService;
 
     @Autowired
@@ -51,6 +52,6 @@ public class UserController extends BaseController{
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok()
-                            .body(DELETE_SUCCESS_MSG);
+                            .body(Constant.DELETE_SUCCESS_MSG);
     }
 }

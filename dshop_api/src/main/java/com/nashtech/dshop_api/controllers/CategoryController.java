@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nashtech.dshop_api.dto.requests.CategoryCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.responses.CategoryDto;
 import com.nashtech.dshop_api.services.CategoryService;
+import com.nashtech.dshop_api.utils.Constant;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/categories")
-public class CategoryController extends BaseController{
+public class CategoryController{
     
     private final CategoryService categoryService;
 
@@ -64,6 +65,6 @@ public class CategoryController extends BaseController{
     public ResponseEntity<Object> deleteCategory(@PathVariable("id") Long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.ok()
-                            .body(DELETE_SUCCESS_MSG);
+                            .body(Constant.DELETE_SUCCESS_MSG);
     }
 }

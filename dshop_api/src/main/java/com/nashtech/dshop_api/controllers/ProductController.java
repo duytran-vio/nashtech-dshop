@@ -18,12 +18,13 @@ import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
 import com.nashtech.dshop_api.dto.responses.Product.ProductElementDto;
 import com.nashtech.dshop_api.services.ProductService;
+import com.nashtech.dshop_api.utils.Constant;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
-public class ProductController extends BaseController{
+public class ProductController{
     
     private final ProductService productService;
 
@@ -65,6 +66,6 @@ public class ProductController extends BaseController{
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok()
-                            .body(DELETE_SUCCESS_MSG);
+                            .body(Constant.DELETE_SUCCESS_MSG);
     }
 }

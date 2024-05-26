@@ -16,7 +16,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/reviews")
-public class ReviewController extends BaseController{
+public class ReviewController{
     
     private final ReviewService reviewService;
 
