@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.nashtech.dshop_api.data.entities.User;
-import com.nashtech.dshop_api.dto.requests.User.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 
 public interface UserService extends UserDetailsService{
-    public UserDto createUser(UserCreateRequest user);
+    public User save(User user);
     public UserDto getUserById(Long id);
     public List<UserDto> getAllUsers();
     public void deleteUser(Long id);

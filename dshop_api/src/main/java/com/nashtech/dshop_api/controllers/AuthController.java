@@ -31,4 +31,10 @@ public class AuthController {
         return ResponseEntity.ok().body(response);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@Valid @RequestBody UserCreateRequest data) {
+        var response = authService.register(data);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 }
