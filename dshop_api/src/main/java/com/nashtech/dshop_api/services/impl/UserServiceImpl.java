@@ -3,6 +3,8 @@ package com.nashtech.dshop_api.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +18,7 @@ import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
 import com.nashtech.dshop_api.services.UserService;
 
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -26,7 +29,8 @@ public class UserServiceImpl implements UserService{
     @Autowired
     public UserServiceImpl(UserRepository userRepository, 
                             UserMapper mapper,
-                            PasswordEncoder passwordEncoder) {
+                            PasswordEncoder passwordEncoder
+                            ) {
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
