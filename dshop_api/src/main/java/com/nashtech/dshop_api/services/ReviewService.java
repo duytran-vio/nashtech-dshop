@@ -1,11 +1,12 @@
 package com.nashtech.dshop_api.services;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.nashtech.dshop_api.dto.requests.ReviewGetRequest;
 import com.nashtech.dshop_api.dto.responses.ReviewDto;
 
 public interface ReviewService {
     public ReviewDto createReview(ReviewDto reviewDto);
-    public List<ReviewDto> getReviewsByCriterion(ReviewGetRequest reviewGetRequest);
+    public Page<ReviewDto> getReviewsByCriterion(ReviewGetRequest reviewGetRequest, Pageable pageable);
 }

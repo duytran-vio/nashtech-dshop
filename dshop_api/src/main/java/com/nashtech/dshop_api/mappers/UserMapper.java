@@ -14,5 +14,6 @@ public abstract class UserMapper {
     public abstract UserDto toDto(User user);
     
     @Mapping(source = "roleId", target = "role.id")
-    public abstract User toEntity(UserCreateRequest dto);
+    @Mapping(target = "onlineStatus", constant = "INACTIVE")
+    public abstract User toEntityFromCreateRequest(UserCreateRequest dto);
 }

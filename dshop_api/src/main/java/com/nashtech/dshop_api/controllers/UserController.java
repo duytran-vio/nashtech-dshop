@@ -3,6 +3,8 @@ package com.nashtech.dshop_api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
+import com.nashtech.dshop_api.dto.requests.User.UserGetRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.services.UserService;
 import com.nashtech.dshop_api.utils.Constant;
@@ -31,8 +34,8 @@ public class UserController{
     }
 
     @GetMapping
-    public ResponseEntity<Object> getUsers() {
-        List<UserDto> users = userService.getAllUsers();
+    public ResponseEntity<Object> getUsers(@Valid UserGetRequest request, Pageable pageable) {
+        Page<UserDto> users = userService.getAllUsers(request, pageable);
         return ResponseEntity.ok().body(users);
     }
 

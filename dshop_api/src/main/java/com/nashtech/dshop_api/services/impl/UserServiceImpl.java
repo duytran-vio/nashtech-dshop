@@ -1,13 +1,17 @@
 package com.nashtech.dshop_api.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.nashtech.dshop_api.data.entities.StatusType;
 import com.nashtech.dshop_api.data.entities.User;
+import com.nashtech.dshop_api.data.entities.User_;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
 import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
+import com.nashtech.dshop_api.dto.requests.User.UserGetRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
@@ -26,18 +30,38 @@ public class UserServiceImpl implements UserService{
         this.mapper = mapper;
     }
 
+    public static Specification<User> likeUsername(String username) {
+        return (root, query, builder) -> {
+            return builder.like(root.get(User_.USERNAME), "%" + username + "%");
+        };
+    }
+
+    public static Specification<User> hasOnlineStatus(StatusType onlineStatus) {
+        return (root, query, builder) -> {
+            return builder.equal(root.get(User_.ONLINE_STATUS), onlineStatus);
+        };
+    }
+
     @Override
     public UserDto createUser(UserCreateRequest userDto) {
-        User user = mapper.toEntity(userDto);
+        User user = mapper.toEntityFromCreateRequest(userDto);
         return mapper.toDto(userRepository.save(user));
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                            .stream()
-                            .map(mapper::toDto)
-                            .toList();
+    public Page<UserDto> getAllUsers(UserGetRequest request, Pageable pageable) {
+        Specification<User> spec = Specification.where(null);
+        if (request.getUsername() != null) {
+            spec = spec.and(likeUsername(request.getUsername()));
+        }
+        if (request.getOnlineStatus() != null) {
+            spec = spec.and(hasOnlineStatus(request.getOnlineStatus()));
+        }
+
+        var users = userRepository.findAll(spec, pageable)
+                                    .map(mapper::toDto);
+
+        return users;
     }
 
     @Override 

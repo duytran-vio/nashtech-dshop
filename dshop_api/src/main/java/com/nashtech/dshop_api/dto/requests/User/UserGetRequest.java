@@ -1,4 +1,4 @@
-package com.nashtech.dshop_api.dto.responses;
+package com.nashtech.dshop_api.dto.requests.User;
 
 import com.nashtech.dshop_api.data.entities.StatusType;
 
@@ -7,11 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Getter
 @Setter
-public class UserDto {
-    private Long id;
+@Getter
+public class UserGetRequest {
     private String username;
-    private String email;
     private StatusType onlineStatus;
 }

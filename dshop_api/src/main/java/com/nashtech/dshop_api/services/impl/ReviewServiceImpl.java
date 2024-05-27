@@ -3,6 +3,8 @@ package com.nashtech.dshop_api.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public List<ReviewDto> getReviewsByCriterion(ReviewGetRequest reviewGetRequest) {
+    public Page<ReviewDto> getReviewsByCriterion(ReviewGetRequest reviewGetRequest, Pageable pageable) {
         Specification<Review> spec = Specification.where(null);
 
         if (reviewGetRequest.getProductId() != null) {
@@ -81,10 +83,8 @@ public class ReviewServiceImpl implements ReviewService{
             spec = spec.and(hasRating(reviewGetRequest.getRating()));
         }
 
-        var reviews = reviewRepository.findAll(spec)
-                                        .stream()
-                                        .map(mapper::toDto)
-                                        .toList();
+        var reviews = reviewRepository.findAll(spec, pageable)
+                                        .map(mapper::toDto);
         return reviews;
     }
 }

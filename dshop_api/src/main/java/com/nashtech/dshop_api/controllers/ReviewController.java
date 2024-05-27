@@ -1,6 +1,7 @@
 package com.nashtech.dshop_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +33,8 @@ public class ReviewController{
     }
 
     @GetMapping
-    public ResponseEntity<Object> getReviewsByCriterion(@Valid ReviewGetRequest reviewGetRequest){
-        var reviews = reviewService.getReviewsByCriterion(reviewGetRequest);
+    public ResponseEntity<Object> getReviewsByCriterion(@Valid ReviewGetRequest reviewGetRequest, Pageable pageable){
+        var reviews = reviewService.getReviewsByCriterion(reviewGetRequest, pageable);
         return ResponseEntity.ok().body(reviews);
     }
 }
