@@ -55,7 +55,7 @@ public class User extends AuditEntity<Long> implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.getRoleName()));
+        return List.of(new SimpleGrantedAuthority("ROLE_"+this.role.getRoleName()));
     }
 
     @Override
