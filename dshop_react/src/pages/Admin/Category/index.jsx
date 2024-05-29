@@ -1,29 +1,78 @@
-import { Button, Form, Input, Menu } from "antd";
-import React from "react";
+import { Button, Menu } from "antd";
+import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
-import CategoryImageUpload from "./CategoryImageUpload";
+import useSWR from "swr";
+import {
+  addCategory,
+  categoriesEndpoint,
+  getCategories,
+  updateCategory
+} from "../../../services/categoryService";
+import Loading from "../../../components/Loading";
+import CategoryUpdate from "./CategoryUpdate";
 
-const categories = [
-  {
-    key: "1",
-    label: "Category 1",
-  },
-  {
-    key: "2",
-    label: "Category 2",
-  },
-  {
-    key: "3",
-    label: "Category 3",
-  },
-];
+const initCategory = {
+  id: null,
+  categoryName: "",
+};
 
 const AdminCategory = () => {
+  const [selectedCategory, setSelectedCategory] = useState({
+    key: null,
+    category: initCategory,
+  });
+
+  const {
+    data: categories,
+    isLoading,
+    isError,
+    mutate,
+  } = useSWR(categoriesEndpoint, getCategories, {
+    onSuccess: (data) =>
+      data.sort((a, b) => a.categoryName.localeCompare(b.categoryName)),
+  });
+
+  const handleAddCategory = async (newCategory) => {
+    try {
+      await addCategory(newCategory);
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateCategory = async (id, updatedCategory) => {
+    try {
+      await updateCategory(id, updatedCategory);
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (isLoading) return <Loading />;
+
+  const handleClickCategory = (e) => {
+    if (e === null) {
+      setSelectedCategory({ key: null, category: initCategory });
+      return;
+    }
+    const key = e.key;
+    const category = categories.find(
+      (category) => category.id === parseInt(key, 10)
+    );
+    setSelectedCategory({ key, category });
+  };
+
   return (
     <div className="m-5">
       <div>
-        <Button type="primary" icon={<PlusOutlined />}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => handleClickCategory(null)}
+        >
           Add Category
         </Button>
       </div>
@@ -33,38 +82,23 @@ const AdminCategory = () => {
             Categories
           </Title>
           <Menu
-            // onClick={handleClick}
+            onClick={handleClickCategory}
             className="w-full p-0"
-            defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["sub1"]}
             mode="inline"
-            items={categories}
+            selectedKeys={selectedCategory.key ? [selectedCategory.key] : []}
+            items={categories?.map((category) => ({
+              key: category.id,
+              label: category.categoryName,
+            }))}
           />
         </div>
 
         <div className="col-start-2 col-span-5 bg-white">
-          <div className="">
-            <Title level={3} className="p-2 border-b-2">
-              New Category
-            </Title>
-          </div>
-          <Form layout="vertical" className="p-5">
-            <Form.Item label={<b>Category Name</b>}>
-              <Input
-                type="text"
-                className="w-3/12"
-                placeholder="Category Name"
-              />
-            </Form.Item>
-            <Form.Item label={<b>Category Image</b>}>
-              <CategoryImageUpload />
-            </Form.Item>
-            <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Save
-              </Button>
-            </Form.Item>
-          </Form>
+          <CategoryUpdate
+            currentCategory={selectedCategory.category}
+            addCategory={handleAddCategory}
+            updateCategory={handleUpdateCategory}
+          />
         </div>
       </div>
     </div>
