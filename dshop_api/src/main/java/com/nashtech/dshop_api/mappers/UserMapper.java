@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.nashtech.dshop_api.data.entities.User;
-import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
+import com.nashtech.dshop_api.dto.requests.User.UserCreateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import org.mapstruct.ReportingPolicy;
 

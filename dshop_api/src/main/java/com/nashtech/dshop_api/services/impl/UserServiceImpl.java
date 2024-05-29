@@ -1,6 +1,8 @@
 package com.nashtech.dshop_api.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,22 +12,22 @@ import com.nashtech.dshop_api.data.entities.StatusType;
 import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.entities.User_;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
-import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
 import com.nashtech.dshop_api.dto.requests.User.UserGetRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
 import com.nashtech.dshop_api.services.UserService;
 
+
 @Service
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
     private UserMapper mapper;
-
     
-    public UserServiceImpl(@Autowired UserRepository userRepository, 
-                            @Autowired UserMapper mapper) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, 
+                            UserMapper mapper) {
         this.userRepository = userRepository;
         this.mapper = mapper;
     }
@@ -43,9 +45,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDto createUser(UserCreateRequest userDto) {
-        User user = mapper.toEntityFromCreateRequest(userDto);
-        return mapper.toDto(userRepository.save(user));
+    public User save(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -85,5 +86,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public Boolean isUserExist(Long id) {
         return userRepository.existsById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));  
+        return user;
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.nashtech.dshop_api.dto.responses.ErrorResponse;
 import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
+import com.nashtech.dshop_api.utils.Constant;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -58,5 +61,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var error = ErrorResponse.builder().code(HttpStatus.CONFLICT.value())
             .message(ex.getCause().toString()).build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
+    protected ResponseEntity<ErrorResponse> handleAuthenticationException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.UNAUTHORIZED.value())
+            .message(Constant.FAILED_AUTHORIZATION_MSG).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
