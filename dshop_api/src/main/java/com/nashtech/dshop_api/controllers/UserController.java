@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nashtech.dshop_api.dto.requests.UserCreateRequest;
+import com.nashtech.dshop_api.dto.requests.User.UserCreateRequest;
 import com.nashtech.dshop_api.dto.requests.User.UserGetRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.services.UserService;
@@ -37,12 +37,6 @@ public class UserController{
     public ResponseEntity<Object> getUsers(@Valid UserGetRequest request, Pageable pageable) {
         Page<UserDto> users = userService.getAllUsers(request, pageable);
         return ResponseEntity.ok().body(users);
-    }
-
-    @PostMapping
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest dto) {
-        UserDto user = userService.createUser(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @GetMapping("/{id}")

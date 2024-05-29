@@ -20,7 +20,7 @@ public interface CategoryMapper {
     public Category toEntityFromRequest(CategoryCreateUpdateRequest categoryDto);
 
     
-    @Mapping(source = "parentId", target = "parentCategory.id", ignore = true)
+    @Mapping(source = "parentId", target = "parentCategory", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public Category updateEntityFromRequest(CategoryCreateUpdateRequest categoryDto, @MappingTarget Category category);
 }

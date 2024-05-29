@@ -1,4 +1,4 @@
-package com.nashtech.dshop_api.dto.requests;
+package com.nashtech.dshop_api.dto.requests.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
