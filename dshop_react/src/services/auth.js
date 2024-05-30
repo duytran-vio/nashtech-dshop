@@ -13,7 +13,7 @@ export const sendLogin = async (username, password, desireRole) => {
       if (desireRole && user.role !== desireRole) {
         throw new Error("You don't have permission to access this page");
       }
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify({ ...user, token: response.data.token}));
       return response.data;
     })
     .catch((error) => {

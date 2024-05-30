@@ -1,4 +1,4 @@
-import { Button, Menu } from "antd";
+import { Button, Menu, message } from "antd";
 import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
@@ -38,7 +38,7 @@ const AdminCategory = () => {
       await addCategory(newCategory);
       mutate();
     } catch (error) {
-      console.log(error);
+      message.error(error.message);
     }
   };
 
@@ -47,7 +47,7 @@ const AdminCategory = () => {
       await updateCategory(id, updatedCategory);
       mutate();
     } catch (error) {
-      console.log(error);
+      message.error(error.message);
     }
   };
 
