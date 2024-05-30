@@ -18,4 +18,5 @@ public class ProductElementDto {
     private Long categoryId;
     private StatusType status;
     private Boolean isFeatured;
+    private Long stock;
 }

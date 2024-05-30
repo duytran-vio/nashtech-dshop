@@ -1,100 +1,178 @@
-import { Space, Table, Tag } from "antd";
-import React from "react";
+import { Button, Menu, Space, Table, Tag, message } from "antd";
+import React, { useEffect, useState } from "react";
+import shopLogo from "../../../assets/shopLogo.png";
+import {
+  deleteProduct,
+  getProducts,
+  productsEndpoint,
+} from "../../../services/productService";
+import useSWR from "swr";
 
-const columns = [
+const items = [
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
+    label: "All Products",
+    key: "ALL",
   },
   {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
+    label: "Active",
+    key: "ACTIVE",
   },
   {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
+    label: "Inactive",
+    key: "INACTIVE",
   },
 ];
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
+// const rowSelection = {
+//   onChange: (selectedRowKeys, selectedRows) => {
+//     console.log(
+//       `selectedRowKeys: ${selectedRowKeys}`,
+//       "selectedRows: ",
+//       selectedRows
+//     );
+//   },
+//   getCheckboxProps: (record) => ({
+//     disabled: record.name === "Disabled User",
+//     // Column configuration not to be checked
+//     name: record.name,
+//   }),
+// };
+
+const initPageSize = 3;
 
 const ProductList = () => {
+  // const [response, setResponse] = useState();
+  const [filter, setFilter] = useState({
+    status: undefined,
+    page: 0,
+    size: initPageSize,
+  });
+
+  const {
+    data: response,
+    error,
+    isLoading,
+    isFetching,
+    mutate
+  } = useSWR(
+    { url: productsEndpoint, params: { filter: filter } },
+    getProducts,
+    {
+      onSuccess: (data) => {
+        data.content = data.content.map((product) => {
+          return { ...product, key: product.id };
+        });
+      },
+    }
+  );
+
+  const handleDeleteProduct = async (id) => {
+    try {
+      await deleteProduct(id);
+      // mutate({ url: productsEndpoint, params: { filter: filter } });
+      mutate();
+      message.success("Delete product success");
+    }
+    catch (e) {
+      message.error(e.message);
+    }
+  };
+
+  if (error) {
+    message.error("Failed to fetch products");
+  }
+
+  const columns = [
+    {
+      title: "Product",
+      dataIndex: "product",
+      key: "img_url",
+      render: (url) => <img src={url} alt="productImg" className="size-14" />,
+    },
+    {
+      title: "Name",
+      dataIndex: "productName",
+      key: "name",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Stock",
+      key: "stock",
+      dataIndex: "stock",
+    },
+    {
+      title: "Sale",
+      key: "sale",
+      dataIndex: "soldNum",
+    },
+    {
+      title: "Status",
+      key: "status",
+      dataIndex: "status",
+      render: (status) => {
+        let color = status === "ACTIVE" ? "green" : "red";
+        return (
+          <Tag color={color} key={status}>
+            {status}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Action",
+      key: "key",
+      render: (record) => (
+        <Space size="middle">
+          <Button type="primary">Edit</Button>
+          <Button danger onClick={() => handleDeleteProduct(record.id)}>
+            Delete
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  const onChangeStatus = (e) => {
+    setFilter({ ...filter, status: e.key === "ALL" ? undefined : e.key, page: 0});
+  };
+
+  const handleOnChangePage = async (page, pageSize) => {
+    setFilter({ ...filter, page: page - 1, size: pageSize });
+  };
+
   return (
-    <Table
-      rowSelection={{ type: "checkbox", ...rowSelection }}
-      columns={columns}
-      dataSource={data}
-    />
+    <>
+      <div>
+        <Menu
+          onClick={onChangeStatus}
+          selectedKeys={[filter.status ?? "ALL"]}
+          mode="horizontal"
+          items={items}
+        />
+      </div>
+      <div className="m-3">
+        <Table
+          rowSelection={{
+            type: "checkbox",
+            //  ...rowSelection
+          }}
+          columns={columns}
+          dataSource={response?.content}
+          pagination={{
+            showSizeChanger: true,
+            pageSizeOptions: ["3", "5", "10", "15", "20"],
+            total: response?.totalElements,
+            defaultPageSize: initPageSize,
+            defaultCurrent: 1,
+            onChange: handleOnChangePage,
+          }}
+        />
+      </div>
+    </>
   );
 };
 
