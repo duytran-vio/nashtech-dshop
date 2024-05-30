@@ -1,11 +1,21 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
-import shopLogo from "../../../assets/logo192.png"
+import { Button, Checkbox, Form, Input, message } from "antd";
+import shopLogo from "../../../assets/shopLogo.png"
+import { sendLogin } from "../../../services/auth";
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+  const navigate = useNavigate();
+  const handleLogin = async (values) => {
+    try{
+      await sendLogin(values.username, values.password, "ADMIN")
+      message.success("Login Success")
+      navigate("/admin/products")
+    }
+    catch(e){
+      message.error(e.message);
+    }
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -19,7 +29,7 @@ const AdminLogin = () => {
           initialValues={{
             remember: true,
           }}
-          onFinish={onFinish}
+          onFinish={handleLogin}
         >
           <Form.Item
             name="username"
