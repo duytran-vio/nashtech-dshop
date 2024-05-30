@@ -10,22 +10,22 @@ const items = [
     label: 'Manage Product',
     children: [
       {
-        key: '11',
+        key: '/admin/products',
         label: 'Product List',
         
       },
       {
-        key: '12',
+        key: '/admin/new-product',
         label: 'Add New Product',
       },
       {
-        key: '13',
+        key: '/admin/categories',
         label: 'Categories',
       },
     ],
   },
   {
-    key: '2',
+    key: '/admin/customers',
     icon: <TeamOutlined />,
     label: 'Manage Customers',
   },
@@ -36,30 +36,15 @@ const SideMenu = () => {
   const navigate = useNavigate();
 
   const handleClick = (e) => {
-    switch (e.key) {
-      case '11':
-        navigate('/admin/products');
-        break;
-      case '12':
-          navigate('/admin/new-product');
-          break;
-      case '13':
-        navigate('/admin/categories');
-        break;
-      case '2':
-          navigate('/admin/customers');
-          break;
-      default:
-        break;
-    }
+    navigate(e.key);
   }
 
   return (
     <Menu
       onClick={handleClick}
       className="h-full"
-      defaultSelectedKeys={['1']}
-      defaultOpenKeys={['sub1']}
+      defaultSelectedKeys={['/admin/products']}
+      defaultOpenKeys={['1']}
       mode="inline"
       items={items}
     />
