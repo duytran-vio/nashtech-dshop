@@ -6,14 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.dshop_api.data.entities.Image;
+import com.nashtech.dshop_api.data.entities.Image_;
 import com.nashtech.dshop_api.data.repositories.ImageRepository;
 import com.nashtech.dshop_api.dto.responses.ImageUploadResponse;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.ImageMapper;
 import com.nashtech.dshop_api.services.ImageService;
 import com.nashtech.dshop_api.utils.FileUtils;
 
 @Service
-public class ImageServiceImpl implements ImageService{
+public class ImageServiceImpl implements ImageService {
 
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -29,7 +31,7 @@ public class ImageServiceImpl implements ImageService{
         this.imageRepository = imageRepository;
         this.mapper = mapper;
     }
-    
+
     @Override
     public ImageUploadResponse saveImage(MultipartFile file, String serverHost) {
         String fileName = file.getOriginalFilename();
@@ -43,5 +45,11 @@ public class ImageServiceImpl implements ImageService{
         image.setSize(file.getSize());
 
         return mapper.toImageUploadResponse(imageRepository.save(image));
+    }
+
+    @Override
+    public Image getEntityById(Long id) {
+        return imageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Image.class.getSimpleName(), Image_.ID, id));
     }
 }

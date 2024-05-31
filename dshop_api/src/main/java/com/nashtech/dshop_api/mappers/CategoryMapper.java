@@ -14,13 +14,16 @@ import com.nashtech.dshop_api.dto.responses.CategoryDto;
 public interface CategoryMapper {
     
     @Mapping(source = "parentCategory.id", target = "parentId")
+    @Mapping(source = "image", target = "image")
     public CategoryDto toDto(Category category);
 
     @Mapping(source = "parentId", target = "parentCategory", ignore = true)
+    @Mapping(source = "imageId", target = "image", ignore = true)
     public Category toEntityFromRequest(CategoryCreateUpdateRequest categoryDto);
 
     
     @Mapping(source = "parentId", target = "parentCategory", ignore = true)
+    @Mapping(source = "imageId", target = "image", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public Category updateEntityFromRequest(CategoryCreateUpdateRequest categoryDto, @MappingTarget Category category);
 }

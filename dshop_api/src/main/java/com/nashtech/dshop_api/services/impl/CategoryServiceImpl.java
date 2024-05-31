@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.Category;
+import com.nashtech.dshop_api.data.entities.Image;
 import com.nashtech.dshop_api.data.repositories.CategoryRepository;
 import com.nashtech.dshop_api.dto.requests.CategoryCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.responses.CategoryDto;
@@ -13,6 +14,7 @@ import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.CategoryMapper;
 import com.nashtech.dshop_api.services.CategoryService;
+import com.nashtech.dshop_api.services.ImageService;
 
 
 @Service
@@ -20,12 +22,14 @@ public class CategoryServiceImpl implements CategoryService{
     
     private final CategoryRepository categoryRepository;
     private final CategoryMapper mapper;
+    private final ImageService imageService;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository,
-                                CategoryMapper mapper) {
+                                CategoryMapper mapper, ImageService imageService) {
         this.categoryRepository = categoryRepository;
         this.mapper = mapper;
+        this.imageService = imageService;
     }
 
     @Override
@@ -52,12 +56,26 @@ public class CategoryServiceImpl implements CategoryService{
         if (parentId == null) {
             category.setParentCategory(null);
             category.setLayerNum(Long.valueOf(0));
+            return;
         }
-        else{
-            Category parentCategory = this.getCategoryEntityById(parentId);
-            category.setParentCategory(parentCategory);
-            category.setLayerNum(parentCategory.getLayerNum() + 1);
+        if (category.getParentCategory() != null && category.getParentCategory().getId() == parentId) {
+            return;
         }
+        Category parentCategory = this.getCategoryEntityById(parentId);
+        category.setParentCategory(parentCategory);
+        category.setLayerNum(parentCategory.getLayerNum() + 1);
+    }
+    
+    private void updateCategoryImage(Category category, Long imageId) {
+        if (imageId == null) {
+            category.setImage(null);
+            return;
+        }
+        if (category.getImage() != null && category.getImage().getId() == imageId) {
+            return;
+        }
+        Image image = imageService.getEntityById(imageId);
+        category.setImage(image);
     }
 
     @Override
@@ -68,6 +86,8 @@ public class CategoryServiceImpl implements CategoryService{
 
         Category category = mapper.toEntityFromRequest(categoryRequest);
         updateParentCategory(category, categoryRequest.getParentId());
+        
+        updateCategoryImage(category, categoryRequest.getImageId());
 
         category = categoryRepository.save(category);
         return mapper.toDto(category);
@@ -85,11 +105,9 @@ public class CategoryServiceImpl implements CategoryService{
 
         category = mapper.updateEntityFromRequest(categoryRequest, category);
 
-        if ((category.getParentCategory() != null
-                && categoryRequest.getParentId() != category.getParentCategory().getId())
-                || (category.getParentCategory() == null && categoryRequest.getParentId() != null)) {
-            updateParentCategory(category, categoryRequest.getParentId());
-        }
+        updateParentCategory(category, categoryRequest.getParentId());
+
+        updateCategoryImage(category, categoryRequest.getImageId());
 
         category = categoryRepository.save(category);
         return mapper.toDto(category);

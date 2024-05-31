@@ -1,5 +1,5 @@
 import { Button, Form, Input } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CategoryImageUpload from "./CategoryImageUpload";
 import { useForm } from "antd/es/form/Form";
 import Title from "antd/es/typography/Title";
@@ -19,15 +19,25 @@ const validateMessages = {
 
 const CategoryUpdate = (props) => {
   const [form] = useForm();
+  const [image, setImage] = useState(props.currentCategory.image);
+  const [fileList, setFileList] = useState([]);
+
   useEffect(() => {
     form.setFieldsValue({
       categoryName: props.currentCategory.categoryName,
     });
+    setImage(props.currentCategory.image);
+    if (props.currentCategory.image) {
+      setFileList([props.currentCategory.image]);
+    } else {
+      setFileList([]);
+    }
   }, [form, props.currentCategory]);
 
   var isNewCategory = props.currentCategory.id === null;
 
   const handleOnFinish = (values) => {
+    values.imageId = image ? image.id : null;
     if (isNewCategory) {
       props.addCategory(values);
     } else {
@@ -80,7 +90,14 @@ const CategoryUpdate = (props) => {
           />
         </Form.Item>
         <Form.Item label={<b>Category Image</b>}>
-          <CategoryImageUpload />
+          <CategoryImageUpload
+            setImage={setImage}
+            image={image}
+            currentCategory={props.currentCategory}
+            fileList={fileList}
+            setFileList={setFileList}
+          />
+          {/* {(image?.url) ? (<img className="w-1/4" src={image?.url} alt="category" />) : (<>No Image</>)} */}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">

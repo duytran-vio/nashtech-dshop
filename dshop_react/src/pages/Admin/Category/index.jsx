@@ -7,7 +7,7 @@ import {
   addCategory,
   categoriesEndpoint,
   getCategories,
-  updateCategory
+  updateCategory,
 } from "../../../services/categoryService";
 import Loading from "../../../components/Loading";
 import CategoryUpdate from "./CategoryUpdate";
@@ -15,6 +15,7 @@ import CategoryUpdate from "./CategoryUpdate";
 const initCategory = {
   id: null,
   categoryName: "",
+  image: null,
 };
 
 const AdminCategory = () => {
@@ -58,11 +59,10 @@ const AdminCategory = () => {
       setSelectedCategory({ key: null, category: initCategory });
       return;
     }
-    const key = e.key;
     const category = categories.find(
-      (category) => category.id === parseInt(key, 10)
+      (category) => category.id === parseInt(e.key, 10)
     );
-    setSelectedCategory({ key, category });
+    setSelectedCategory({ key: e.key, category: category });
   };
 
   return (
