@@ -54,6 +54,7 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.PUT, this.baseUrl + "/categories/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/categories/**").hasRole("ADMIN")
                     .requestMatchers(this.baseUrl + "/reviews/**").permitAll()
+                    .requestMatchers("/uploads/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

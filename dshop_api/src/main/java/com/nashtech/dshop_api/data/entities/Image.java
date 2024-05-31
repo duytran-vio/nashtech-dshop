@@ -16,8 +16,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image extends AuditEntity<Long> {
-    @Column(name = "image_url", nullable = false)
-    private String imageUrl;
+    @Column(name = "file_name", nullable = false)
+    private String fileName;
+
+    @Column(name = "url", nullable = false)
+    private String url;
+
+    @Column(name = "size", nullable = false)
+    private Long size;
 
     @OneToOne(mappedBy = "avatar")
     private CustomerInfo customerInfo;

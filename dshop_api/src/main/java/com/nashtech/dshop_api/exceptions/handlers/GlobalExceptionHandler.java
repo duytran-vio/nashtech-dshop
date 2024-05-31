@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.nashtech.dshop_api.dto.responses.ErrorResponse;
 import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
+import com.nashtech.dshop_api.exceptions.UploadFileFailedException;
 import com.nashtech.dshop_api.utils.Constant;
 
 @ControllerAdvice
@@ -68,5 +69,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var error = ErrorResponse.builder().code(HttpStatus.UNAUTHORIZED.value())
             .message(Constant.FAILED_AUTHORIZATION_MSG).build();
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(UploadFileFailedException.class)
+    protected ResponseEntity<ErrorResponse> handleUploadFileFailedException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.EXPECTATION_FAILED.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(error);
     }
 }
