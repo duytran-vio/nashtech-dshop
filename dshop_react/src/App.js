@@ -4,9 +4,9 @@ import AdminLogin from "./pages/Admin/Login";
 import AdminProduct from "./pages/Admin/Product";
 import AdminHome from "./pages/Admin/Home";
 import AdminCategory from "./pages/Admin/Category";
-import NewProductCreate from "./pages/Admin/Product/NewProduct";
 import AdminCustomer from "./pages/Admin/Customer";
 import { Path } from "./utils/constant";
+import AdminProductDetail from "./pages/Admin/Product/ProductDetail";
 
 function App() {
   return (
@@ -16,7 +16,8 @@ function App() {
         <Route path={Path.ADMIN_LOGIN} element={<AdminLogin />} />
         <Route path={Path.ADMIN_ROOT} element={<AdminHome />}>
           <Route path="products" element={<AdminProduct />} />
-          <Route path="new-product" element={<NewProductCreate />} />
+          <Route path="new-product" element={<AdminProductDetail />} />
+          <Route path="products/:id" element={<AdminProductDetail />} />
           <Route path="categories" element={<AdminCategory />} />
           <Route path="customers" element={<AdminCustomer />} />
         </Route>

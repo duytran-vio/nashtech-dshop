@@ -1,6 +1,9 @@
 package com.nashtech.dshop_api.dto.responses.Product;
 
+import java.util.List;
+
 import com.nashtech.dshop_api.data.entities.StatusType;
+import com.nashtech.dshop_api.dto.responses.ImageUploadResponse;
 
 import lombok.Data;
 import lombok.Getter;
@@ -21,4 +24,5 @@ public class ProductDetailDto {
     private Long categoryId;
     private StatusType status;
     private Boolean isFeatured;
+    private List<ImageUploadResponse> images;
 }

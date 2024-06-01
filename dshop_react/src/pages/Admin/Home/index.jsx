@@ -3,7 +3,7 @@ import { Layout, Button, message } from "antd";
 import SideMenu from "./SideMenu";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { sendLogout } from "../../../services/auth";
-import { Path } from "../../../utils/constant";
+import { Path, Role } from "../../../utils/constant";
 
 
 const { Header, Content, Sider } = Layout;
@@ -13,7 +13,7 @@ const AdminHome = () => {
   const user = JSON.parse(localStorage.getItem('user'));
 
   if (user){
-    if (user.role !== "ADMIN"){
+    if (user.role !== Role.ADMIN){
       message.error("You don't have permission to access this page");
       return <Navigate to={Path.ADMIN_LOGIN} />;
     }

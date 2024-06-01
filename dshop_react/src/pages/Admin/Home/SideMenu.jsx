@@ -44,7 +44,7 @@ const SideMenu = () => {
     <Menu
       onClick={handleClick}
       className="h-full"
-      defaultSelectedKeys={['/admin/products']}
+      defaultSelectedKeys={[Path.ADMIN_PRODUCTS]}
       defaultOpenKeys={['1']}
       mode="inline"
       items={items}

@@ -2,9 +2,11 @@ package com.nashtech.dshop_api.data.entities;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -61,4 +63,13 @@ public class Product extends AuditEntity<Long> {
 
     @OneToMany(mappedBy = "product")
     private List<Review> reviews;
+
+    // @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    // private List<ProductImage> productImages;
+
+    @OneToMany
+    @JoinTable(name = "product_images",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id"))
+    private List<Image> images;
 }

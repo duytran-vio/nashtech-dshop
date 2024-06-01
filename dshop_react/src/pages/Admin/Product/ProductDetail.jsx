@@ -1,90 +1,139 @@
-import { Button, Card, Checkbox, Form, Input, Select } from "antd";
+import { Button, Card, Checkbox, Form, Input, Select, message } from "antd";
 import { Typography } from "antd";
 import React, { useState } from "react";
 import ProductImageUpload from "./ProductImageUpLoad";
+import { useParams } from "react-router-dom";
+import useSWR, { mutate } from "swr";
+import {
+  createProduct,
+  getProductById,
+  productsEndpoint,
+} from "../../../services/productService";
+import { StatusType } from "../../../utils/constant";
+import {
+  categoriesEndpoint,
+  getCategories,
+} from "../../../services/categoryService";
 
 const { Title } = Typography;
-
-const onChange = (value) => {
-  console.log(`selected ${value}`);
-};
-const onSearch = (value) => {
-  console.log("search:", value);
-};
 
 // Filter `option.label` match the user type `input`
 const filterOption = (input, option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
-const categories = [
-  {
-    value: "Shirt",
-    label: "Shirt",
-  },
-  {
-    value: "Pants",
-    label: "Pants",
-  },
-  {
-    value: "Shoes",
-    label: "Shoes",
-  },
-];
+// const categories = [
+//   {
+//     value: "Shirt",
+//     label: "Shirt",
+//   },
+//   {
+//     value: "Pants",
+//     label: "Pants",
+//   },
+//   {
+//     value: "Shoes",
+//     label: "Shoes",
+//   },
+// ];
 
 const status = [
   {
-    value: "Active",
-    label: "Active",
+    value: StatusType.ACTIVE,
+    label: StatusType.ACTIVE,
   },
   {
-    value: "Inactive",
-    label: "Inactive",
+    value: StatusType.INACTIVE,
+    label: StatusType.INACTIVE,
   },
 ];
 
 const initialProduct = {
-  title: "",
-  category: "",
+  productName: "",
+  categoryId: null,
   description: "",
   price: 0,
   stock: 0,
-  status: "active",
+  status: StatusType.ACTIVE,
   isFeatured: false,
 };
 
-const NewProductCreate = () => {
-  const [form] = Form.useForm();
+const AdminProductDetail = () => {
+  const params = useParams();
+  const isNewProduct = !params.id;
+  const adminInfo = JSON.parse(localStorage.getItem("user"));
 
+  const [form] = Form.useForm();
   const [product, setProduct] = useState(initialProduct);
+  const [categories, setCategories] = useState([]);
+
+  const {mutate: thisProductMutate } = useSWR(
+    isNewProduct ? null : `${productsEndpoint}/${params.id}`,
+    getProductById,
+    {
+      onSuccess: (data) => {
+        setProduct(data);
+      },
+    }
+  );
+
+  useSWR(
+    categoriesEndpoint,
+    getCategories,
+    {
+      onSuccess: (data) => {
+        setCategories(
+          data.map((category) => ({ value: category.id, label: category.categoryName }))
+        );
+      },
+    }
+  );
+
+  const handleAddProduct = async (product) => {
+    try{
+      setProduct({...product, createUserId: adminInfo.id });
+      console.log(product);
+      await createProduct(product);
+      message.success("Product created successfully");
+      thisProductMutate();
+      mutate(productsEndpoint);
+    }
+    catch (error) {
+      message.error(error.message);
+    }
+  };
+
+  const handleOnFinish = () => {
+    // console.log(product);
+    handleAddProduct(product);
+  };
 
   return (
     <div className="grid grid-cols-12 gap-2 m-5">
       <Card className="col-span-9">
         <Title level={3}>General Infomation</Title>
         <Form layout="vertical" form={form}>
-          <Form.Item label="Product Title">
+          <Form.Item label="Product Title" name="productName">
             <Input
               placeholder="Product Title"
               onChange={(event) =>
                 setProduct({
                   ...product,
-                  title: event.target.value,
+                  productName: event.target.value,
                 })
               }
             />
           </Form.Item>
-          <Form.Item label="Category">
+          <Form.Item label="Category" name="productCategory">
             <Select
               showSearch
               placeholder="Select Category"
               optionFilterProp="children"
-              onChange={(value) => setProduct({ ...product, category: value })}
-              onSearch={onSearch}
+              onChange={(value) => setProduct({ ...product, categoryId: value })}
               filterOption={filterOption}
               options={categories}
             />
           </Form.Item>
-          <Form.Item label="Description">
+          <Form.Item label="Description" name="description">
             <Input.TextArea
               autoSize={{ minRows: 6, maxRows: 6 }}
               placeholder="Write something to describe your product..."
@@ -97,7 +146,7 @@ const NewProductCreate = () => {
             />
           </Form.Item>
           <div className="grid gap-4 grid-cols-4">
-            <Form.Item label="Price">
+            <Form.Item label="Price" name="price">
               <Input
                 placeholder="Price"
                 onChange={(event) =>
@@ -108,7 +157,7 @@ const NewProductCreate = () => {
                 }
               />
             </Form.Item>
-            <Form.Item label="Stock">
+            <Form.Item label="Stock" name="stock">
               <Input
                 placeholder="Stock"
                 onChange={(event) =>
@@ -120,7 +169,7 @@ const NewProductCreate = () => {
               />
             </Form.Item>
           </div>
-          <ProductImageUpload/>
+          <ProductImageUpload />
         </Form>
       </Card>
       <Card className="col-start-10 col-span-3 h-fit">
@@ -128,7 +177,7 @@ const NewProductCreate = () => {
         <div>
           <Select
             options={status}
-            defaultValue={status[0]}
+            defaultValue={status.find((item) => item.value === product.status)}
             className="w-full"
           ></Select>
         </div>
@@ -146,7 +195,7 @@ const NewProductCreate = () => {
           className="w-full"
           type="primary"
           onClick={() => {
-            console.log(product);
+            handleOnFinish();
           }}
         >
           Submit
@@ -156,4 +205,4 @@ const NewProductCreate = () => {
   );
 };
 
-export default NewProductCreate;
+export default AdminProductDetail;

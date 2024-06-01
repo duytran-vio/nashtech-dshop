@@ -3,6 +3,7 @@ package com.nashtech.dshop_api.data.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,7 @@ public class Image extends AuditEntity<Long> {
 
     @OneToOne(mappedBy = "image", fetch = FetchType.LAZY)
     private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
 }

@@ -7,3 +7,13 @@ export const Path = {
     ADMIN_CUSTOMERS: "/admin/customers",
     ADMIN_NEW_PRODUCT: "/admin/new-product",
 }
+
+export const Role = {
+    ADMIN: "ADMIN",
+    CUSTOMER: "CUSTOMER",
+}
+
+export const StatusType = {
+    ACTIVE: "ACTIVE",
+    INACTIVE: "INACTIVE",
+}

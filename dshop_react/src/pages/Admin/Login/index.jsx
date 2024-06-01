@@ -4,13 +4,13 @@ import { Button, Checkbox, Form, Input, message } from "antd";
 import shopLogo from "../../../assets/shopLogo.png"
 import { sendLogin } from "../../../services/auth";
 import { useNavigate } from "react-router-dom";
-import { Path } from "../../../utils/constant";
+import { Path, Role } from "../../../utils/constant";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const handleLogin = async (values) => {
     try{
-      await sendLogin(values.username, values.password, "ADMIN")
+      await sendLogin(values.username, values.password, Role.ADMIN)
       message.success("Login Success")
       navigate(Path.ADMIN_PRODUCTS)
     }

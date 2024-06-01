@@ -1,5 +1,6 @@
 package com.nashtech.dshop_api.services.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.Category;
 import com.nashtech.dshop_api.data.entities.Category_;
+import com.nashtech.dshop_api.data.entities.Image;
 import com.nashtech.dshop_api.data.entities.Product;
 import com.nashtech.dshop_api.data.entities.Product_;
 import com.nashtech.dshop_api.data.entities.StatusType;
@@ -23,6 +25,7 @@ import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.ProductMapper;
 import com.nashtech.dshop_api.services.CategoryService;
+import com.nashtech.dshop_api.services.ImageService;
 import com.nashtech.dshop_api.services.ProductService;
 import com.nashtech.dshop_api.services.UserService;
 
@@ -36,6 +39,7 @@ public class ProductServiceImpl implements ProductService{
     private ProductMapper mapper;
     private CategoryService categoryService;
     private UserService userService;
+    private ImageService imageService;
 
     public static Specification<Product> likeName(String name) {
         return (root, query, builder) -> builder.like(root.get(Product_.productName), "%" + name + "%");
@@ -61,11 +65,13 @@ public class ProductServiceImpl implements ProductService{
     public ProductServiceImpl(ProductRepository productRepository, 
                                 ProductMapper mapper,
                                 CategoryService categoryService,
-                                UserService userService) {
+                                UserService userService,
+                                ImageService imageService) {
         this.productRepository = productRepository;
         this.mapper = mapper;
         this.categoryService = categoryService;
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @Override
@@ -104,6 +110,15 @@ public class ProductServiceImpl implements ProductService{
         return mapper.toProductDetailDto(product);
     }
 
+    public void updateProductImages(Product product, List<Long> imageIds) {
+        List<Image> images = new LinkedList<>();
+        for(Long imageId : imageIds){
+            Image image = imageService.getEntityById(imageId);
+            images.add(image);
+        }
+        product.setImages(images);
+    }
+
     @Override
     public ProductDetailDto createProduct(ProductCreateUpdateRequest productCreateRequest) {
         if (productRepository.existsByProductNameAndIsDeletedFalse(productCreateRequest.getProductName())) {
@@ -118,6 +133,7 @@ public class ProductServiceImpl implements ProductService{
         var product = mapper.toEntityFromCreateRequest(productCreateRequest);
         product.setCreateUser(createUser);
         product.setCategory(category);
+        updateProductImages(product, productCreateRequest.getImageIds());
         product = productRepository.save(product);
         return mapper.toProductDetailDto(product);
     }
@@ -145,6 +161,8 @@ public class ProductServiceImpl implements ProductService{
             Category category = categoryService.getCategoryEntityById(productUpdateRequest.getCategoryId());
             product.setCategory(category);
         }
+
+        updateProductImages(product, productUpdateRequest.getImageIds());
 
         mapper.toEntityFromUpdateRequest(product, productUpdateRequest);
         product = productRepository.save(product);

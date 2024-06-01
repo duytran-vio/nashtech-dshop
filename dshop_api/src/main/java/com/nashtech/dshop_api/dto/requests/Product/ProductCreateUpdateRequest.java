@@ -1,5 +1,7 @@
 package com.nashtech.dshop_api.dto.requests.Product;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -33,4 +35,5 @@ public class ProductCreateUpdateRequest {
     private Boolean isFeatured;
 
     private Long createUserId;
+    private List<Long> imageIds;
 }

@@ -9,8 +9,17 @@ export const getProducts = async (cachekey) => {
     return response.data;
 }
 
+export const getProductById = async (url) => {
+    const response = await api.get(url);
+    return response.data;
+}
+
+export const createProduct = async (product) => {
+    const response = await api.post(productsEndpoint, product);
+    return response.data;
+}
+
 export const deleteProduct = async (id) => {
     const response = await api.delete(`${productsEndpoint}/${id}`);
-    console.log(response);
     return response.data;
 }

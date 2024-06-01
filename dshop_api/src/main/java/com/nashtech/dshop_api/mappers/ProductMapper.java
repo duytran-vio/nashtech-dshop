@@ -1,18 +1,28 @@
 package com.nashtech.dshop_api.mappers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.nashtech.dshop_api.data.entities.Image;
 import com.nashtech.dshop_api.data.entities.Product;
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
+import com.nashtech.dshop_api.dto.responses.ImageUploadResponse;
 import com.nashtech.dshop_api.dto.responses.Product.ProductDetailDto;
 import com.nashtech.dshop_api.dto.responses.Product.ProductElementDto;
 
 @Mapper(componentModel = "spring")
 public abstract class ProductMapper {
 
+    @Autowired
+    private ImageMapper imageMapper;
+
     @Mapping(target = "categoryId", source = "category.id")
+    @Mapping(target = "images", source = "images")
     public abstract ProductDetailDto toProductDetailDto(Product product);
 
     @Mapping(target = "categoryId", source = "category.id")
@@ -35,4 +45,8 @@ public abstract class ProductMapper {
     @Mapping(target = "category", ignore = true)
     public abstract Product toEntityFromUpdateRequest(@MappingTarget Product product,
                                                          ProductCreateUpdateRequest productCreateRequest);
+
+    public List<ImageUploadResponse> toImageUploadResponse(List<Image> images) {
+        return images.stream().map(imageMapper::toImageUploadResponse).collect(Collectors.toList());
+    }
 }
