@@ -16,7 +16,6 @@ const beforeUpload = (file) => {
 };
 const CategoryImageUpload = (props) => {
   const uploadImage = async (options) => {
-    console.log("options: ", options);
     const { onSuccess, onError, file, onProgress } = options;
 
     const fmData = new FormData();
@@ -29,9 +28,7 @@ const CategoryImageUpload = (props) => {
     fmData.append("file", file);
     try {
       const res = await api.post(imagesEndpoint, fmData, config);
-
-      props.setImage(res.data);
-      onSuccess("Ok");
+      onSuccess(res.data);
     } catch (err) {
       message.error("upload failed.");
       onError({ err });
@@ -40,9 +37,6 @@ const CategoryImageUpload = (props) => {
 
   const handleOnChange = ({ file, fileList, event }) => {
     props.setFileList(fileList);
-    if (fileList.length === 0) {
-      props.setImage(null);
-    }
   };
 
   return (

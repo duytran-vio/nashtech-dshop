@@ -19,14 +19,12 @@ const validateMessages = {
 
 const CategoryUpdate = (props) => {
   const [form] = useForm();
-  const [image, setImage] = useState(props.currentCategory.image);
   const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     form.setFieldsValue({
       categoryName: props.currentCategory.categoryName,
     });
-    setImage(props.currentCategory.image);
     if (props.currentCategory.image) {
       setFileList([props.currentCategory.image]);
     } else {
@@ -37,7 +35,9 @@ const CategoryUpdate = (props) => {
   var isNewCategory = props.currentCategory.id === null;
 
   const handleOnFinish = (values) => {
-    values.imageId = image ? image.id : null;
+    if (fileList.length > 0){
+      values.imageId = fileList[0].response.id;
+    }
     if (isNewCategory) {
       props.addCategory(values);
     } else {
@@ -91,13 +91,10 @@ const CategoryUpdate = (props) => {
         </Form.Item>
         <Form.Item label={<b>Category Image</b>}>
           <CategoryImageUpload
-            setImage={setImage}
-            image={image}
             currentCategory={props.currentCategory}
             fileList={fileList}
             setFileList={setFileList}
           />
-          {/* {(image?.url) ? (<img className="w-1/4" src={image?.url} alt="category" />) : (<>No Image</>)} */}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
