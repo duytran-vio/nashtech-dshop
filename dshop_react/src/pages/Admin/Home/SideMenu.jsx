@@ -2,6 +2,7 @@ import React from 'react';
 import { TeamOutlined, ProductOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { Path } from '../../../utils/constant';
 
 const items = [
   {
@@ -10,22 +11,22 @@ const items = [
     label: 'Manage Product',
     children: [
       {
-        key: '/admin/products',
+        key: Path.ADMIN_PRODUCTS,
         label: 'Product List',
         
       },
       {
-        key: '/admin/new-product',
+        key: Path.ADMIN_NEW_PRODUCT,
         label: 'Add New Product',
       },
       {
-        key: '/admin/categories',
+        key: Path.ADMIN_CATEGORIES,
         label: 'Categories',
       },
     ],
   },
   {
-    key: '/admin/customers',
+    key: Path.ADMIN_CUSTOMERS,
     icon: <TeamOutlined />,
     label: 'Manage Customers',
   },

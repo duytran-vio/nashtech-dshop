@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input, message } from "antd";
 import shopLogo from "../../../assets/shopLogo.png"
 import { sendLogin } from "../../../services/auth";
 import { useNavigate } from "react-router-dom";
+import { Path } from "../../../utils/constant";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const AdminLogin = () => {
     try{
       await sendLogin(values.username, values.password, "ADMIN")
       message.success("Login Success")
-      navigate("/admin/products")
+      navigate(Path.ADMIN_PRODUCTS)
     }
     catch(e){
       message.error(e.message);

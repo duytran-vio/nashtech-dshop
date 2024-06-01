@@ -3,6 +3,7 @@ import { Layout, Button, message } from "antd";
 import SideMenu from "./SideMenu";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { sendLogout } from "../../../services/auth";
+import { Path } from "../../../utils/constant";
 
 
 const { Header, Content, Sider } = Layout;
@@ -14,17 +15,17 @@ const AdminHome = () => {
   if (user){
     if (user.role !== "ADMIN"){
       message.error("You don't have permission to access this page");
-      return <Navigate to="/admin/login" />;
+      return <Navigate to={Path.ADMIN_LOGIN} />;
     }
   }
   else {
     message.error("Please login first");
-    return <Navigate to="/admin/login" />;
+    return <Navigate to={Path.ADMIN_LOGIN} />;
   }
 
   const handleLogOut = () => {
     sendLogout();
-    navigate("/admin/login");
+    navigate(Path.ADMIN_LOGIN);
   }
 
 
