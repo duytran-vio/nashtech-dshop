@@ -1,5 +1,7 @@
 package com.nashtech.dshop_api.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +29,12 @@ public class SecurityConfiguration {
     
     @Value("${api.endpoint.base-url}")
     private String baseUrl;
+
+    private final CustomerAccessDeniedHandler customerAccessDeniedHandler;
+
+    public SecurityConfiguration(CustomerAccessDeniedHandler customerAccessDeniedHandler) {
+        this.customerAccessDeniedHandler = customerAccessDeniedHandler;
+    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserDetailsService userService){
@@ -56,7 +65,9 @@ public class SecurityConfiguration {
                     .requestMatchers(this.baseUrl + "/reviews/**").permitAll()
                     .requestMatchers("/uploads/**").permitAll()
                     .anyRequest().authenticated()
+                    
                 )
+                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(this.customerAccessDeniedHandler))
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
