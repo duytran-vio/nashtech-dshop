@@ -21,6 +21,9 @@ api.interceptors.response.use(
     },
     (error) => {
       // Any status codes that falls outside the range of 2xx cause this function to trigger
+      if (error.response.status === 401 || error.response.status === 403) {
+        localStorage.removeItem('user');
+      }
       return Promise.reject(error.response.data);
     }
   );
