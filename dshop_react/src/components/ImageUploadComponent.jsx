@@ -1,7 +1,7 @@
 import React from "react";
 import { message, Upload } from "antd";
-import { imagesEndpoint } from "../../../services/imageService";
-import api from "../../../services/api";
+import { imagesEndpoint } from "../services/imageService";
+import api from "../services/api";
 
 const beforeUpload = (file) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -14,7 +14,8 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-const CategoryImageUpload = (props) => {
+const ImageUploadComponent = (props) => {
+  console.log(props.fileList);
   const uploadImage = async (options) => {
     const { onSuccess, onError, file, onProgress } = options;
 
@@ -36,6 +37,7 @@ const CategoryImageUpload = (props) => {
   };
 
   const handleOnChange = ({ file, fileList, event }) => {
+    console.log(fileList);
     props.setFileList(fileList);
   };
 
@@ -49,11 +51,11 @@ const CategoryImageUpload = (props) => {
         listType="picture-card"
         fileList={props.fileList}
         className="image-upload-grid"
-        maxCount={1}
+        maxCount={props.maxImageCount}
       >
-        {props.fileList.length >= 1 ? null : <div>Upload Button</div>}
+        {props.fileList.length >= props.maxImageCount ? null : <div>Upload Button</div>}
       </Upload>
     </>
   );
 };
-export default CategoryImageUpload;
+export default ImageUploadComponent;

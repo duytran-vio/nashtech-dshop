@@ -1,8 +1,8 @@
 import { Button, Form, Input } from "antd";
 import React, { useEffect, useState } from "react";
-import CategoryImageUpload from "./CategoryImageUpload";
 import { useForm } from "antd/es/form/Form";
 import Title from "antd/es/typography/Title";
+import ImageUploadComponent from "../../../components/ImageUploadComponent";
 
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
@@ -26,7 +26,8 @@ const CategoryUpdate = (props) => {
       categoryName: props.currentCategory.categoryName,
     });
     if (props.currentCategory.image) {
-      setFileList([props.currentCategory.image]);
+      console.log("props.currentCategory.image", props.currentCategory.image);
+      setFileList([{...props.currentCategory.image, uid: props.currentCategory.image.id}]);
     } else {
       setFileList([]);
     }
@@ -90,10 +91,10 @@ const CategoryUpdate = (props) => {
           />
         </Form.Item>
         <Form.Item label={<b>Category Image</b>}>
-          <CategoryImageUpload
-            currentCategory={props.currentCategory}
+          <ImageUploadComponent
             fileList={fileList}
             setFileList={setFileList}
+            maxImageCount={1}
           />
         </Form.Item>
         <Form.Item>

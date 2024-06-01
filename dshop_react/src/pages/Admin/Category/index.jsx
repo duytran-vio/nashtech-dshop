@@ -31,7 +31,7 @@ const AdminCategory = () => {
     mutate,
   } = useSWR(categoriesEndpoint, getCategories, {
     onSuccess: (data) =>
-      data.sort((a, b) => a.categoryName.localeCompare(b.categoryName)),
+      data.sort((a, b) => a.categoryName.localeCompare(b.categoryName.toLowerCase())),
   });
 
   const handleAddCategory = async (newCategory) => {

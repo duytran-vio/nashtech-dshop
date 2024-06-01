@@ -1,40 +1,25 @@
 import { Button, Card, Checkbox, Form, Input, Select, message } from "antd";
 import { Typography } from "antd";
 import React, { useState } from "react";
-import ProductImageUpload from "./ProductImageUpLoad";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useSWR, { mutate } from "swr";
 import {
   createProduct,
   getProductById,
   productsEndpoint,
 } from "../../../services/productService";
-import { StatusType } from "../../../utils/constant";
+import { Path, StatusType } from "../../../utils/constant";
 import {
   categoriesEndpoint,
   getCategories,
 } from "../../../services/categoryService";
+import ImageUploadComponent from "../../../components/ImageUploadComponent";
 
 const { Title } = Typography;
 
 // Filter `option.label` match the user type `input`
 const filterOption = (input, option) =>
   (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-
-// const categories = [
-//   {
-//     value: "Shirt",
-//     label: "Shirt",
-//   },
-//   {
-//     value: "Pants",
-//     label: "Pants",
-//   },
-//   {
-//     value: "Shoes",
-//     label: "Shoes",
-//   },
-// ];
 
 const status = [
   {
@@ -59,14 +44,15 @@ const initialProduct = {
 
 const AdminProductDetail = () => {
   const params = useParams();
+  const navigate = useNavigate();
   const isNewProduct = !params.id;
-  const adminInfo = JSON.parse(localStorage.getItem("user"));
 
   const [form] = Form.useForm();
   const [product, setProduct] = useState(initialProduct);
   const [categories, setCategories] = useState([]);
+  const [imageList, setImageList] = useState([]);
 
-  const {mutate: thisProductMutate } = useSWR(
+  const { mutate: thisProductMutate } = useSWR(
     isNewProduct ? null : `${productsEndpoint}/${params.id}`,
     getProductById,
     {
@@ -76,34 +62,35 @@ const AdminProductDetail = () => {
     }
   );
 
-  useSWR(
-    categoriesEndpoint,
-    getCategories,
-    {
-      onSuccess: (data) => {
-        setCategories(
-          data.map((category) => ({ value: category.id, label: category.categoryName }))
-        );
-      },
-    }
-  );
+  useSWR(categoriesEndpoint, getCategories, {
+    onSuccess: (data) => {
+      setCategories(
+        data.map((category) => ({
+          value: category.id,
+          label: category.categoryName,
+        }))
+      );
+    },
+  });
 
   const handleAddProduct = async (product) => {
-    try{
-      setProduct({...product, createUserId: adminInfo.id });
+    try {
+      const adminInfo = JSON.parse(localStorage.getItem("user"));
+      setProduct({ ...product, createUserId: adminInfo.id });
       console.log(product);
       await createProduct(product);
       message.success("Product created successfully");
       thisProductMutate();
       mutate(productsEndpoint);
-    }
-    catch (error) {
+      navigate(Path.ADMIN_PRODUCTS);
+    } catch (error) {
       message.error(error.message);
     }
   };
 
   const handleOnFinish = () => {
-    // console.log(product);
+    console.log(product);
+    product.imageIds = imageList.map((image) => image.response.id);
     handleAddProduct(product);
   };
 
@@ -128,7 +115,9 @@ const AdminProductDetail = () => {
               showSearch
               placeholder="Select Category"
               optionFilterProp="children"
-              onChange={(value) => setProduct({ ...product, categoryId: value })}
+              onChange={(value) =>
+                setProduct({ ...product, categoryId: value })
+              }
               filterOption={filterOption}
               options={categories}
             />
@@ -169,7 +158,11 @@ const AdminProductDetail = () => {
               />
             </Form.Item>
           </div>
-          <ProductImageUpload />
+          <ImageUploadComponent
+            fileList={imageList}
+            setFileList={setImageList}
+            maxImageCount={5}
+          />
         </Form>
       </Card>
       <Card className="col-start-10 col-span-3 h-fit">
