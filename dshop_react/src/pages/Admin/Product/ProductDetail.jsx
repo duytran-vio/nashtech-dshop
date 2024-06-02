@@ -7,6 +7,7 @@ import {
   createProduct,
   getProductById,
   productsEndpoint,
+  updateProduct,
 } from "../../../services/productService";
 import { Path, StatusType } from "../../../utils/constant";
 import {
@@ -58,6 +59,13 @@ const AdminProductDetail = () => {
     {
       onSuccess: (data) => {
         setProduct(data);
+        form.setFieldsValue(data);
+        setImageList(
+          data.images.map((image) => ({
+            ...image,
+            response: { id: image.id },
+          }))
+        );
       },
     }
   );
@@ -77,7 +85,6 @@ const AdminProductDetail = () => {
     try {
       const adminInfo = JSON.parse(localStorage.getItem("user"));
       setProduct({ ...product, createUserId: adminInfo.id });
-      console.log(product);
       await createProduct(product);
       message.success("Product created successfully");
       thisProductMutate();
@@ -88,36 +95,47 @@ const AdminProductDetail = () => {
     }
   };
 
+  const handleUpdateProduct = async (id, product) => {
+    try {
+      await updateProduct(id, product);
+      message.success("Product updated successfully");
+      thisProductMutate();
+      mutate(productsEndpoint);
+    } catch (error) {
+      message.error(error.message);
+    }
+  }
+
   const handleOnFinish = () => {
-    console.log(product);
     product.imageIds = imageList.map((image) => image.response.id);
-    handleAddProduct(product);
+    if (isNewProduct) {
+      handleAddProduct(product);
+    } else {
+      handleUpdateProduct(params.id, product);
+    }
+  };
+
+  const handleOnValuesChange = (changedValues, allValues) => {
+    setProduct(allValues);
   };
 
   return (
     <div className="grid grid-cols-12 gap-2 m-5">
       <Card className="col-span-9">
         <Title level={3}>General Infomation</Title>
-        <Form layout="vertical" form={form}>
+        <Form
+          layout="vertical"
+          form={form}
+          onValuesChange={handleOnValuesChange}
+        >
           <Form.Item label="Product Title" name="productName">
-            <Input
-              placeholder="Product Title"
-              onChange={(event) =>
-                setProduct({
-                  ...product,
-                  productName: event.target.value,
-                })
-              }
-            />
+            <Input placeholder="Product Title" />
           </Form.Item>
-          <Form.Item label="Category" name="productCategory">
+          <Form.Item label="Category" name="categoryId">
             <Select
               showSearch
               placeholder="Select Category"
               optionFilterProp="children"
-              onChange={(value) =>
-                setProduct({ ...product, categoryId: value })
-              }
               filterOption={filterOption}
               options={categories}
             />
@@ -126,36 +144,14 @@ const AdminProductDetail = () => {
             <Input.TextArea
               autoSize={{ minRows: 6, maxRows: 6 }}
               placeholder="Write something to describe your product..."
-              onChange={(event) =>
-                setProduct({
-                  ...product,
-                  description: event.target.value,
-                })
-              }
             />
           </Form.Item>
           <div className="grid gap-4 grid-cols-4">
             <Form.Item label="Price" name="price">
-              <Input
-                placeholder="Price"
-                onChange={(event) =>
-                  setProduct({
-                    ...product,
-                    price: event.target.value,
-                  })
-                }
-              />
+              <Input placeholder="Price" />
             </Form.Item>
             <Form.Item label="Stock" name="stock">
-              <Input
-                placeholder="Stock"
-                onChange={(event) =>
-                  setProduct({
-                    ...product,
-                    stock: event.target.value,
-                  })
-                }
-              />
+              <Input placeholder="Stock" />
             </Form.Item>
           </div>
           <ImageUploadComponent
@@ -175,14 +171,7 @@ const AdminProductDetail = () => {
           ></Select>
         </div>
 
-        <Checkbox
-          className="my-2"
-          onChange={(event) => {
-            setProduct({ ...product, isFeatured: event.target.checked });
-          }}
-        >
-          Is Featured
-        </Checkbox>
+        <Checkbox className="my-2">Is Featured</Checkbox>
 
         <Button
           className="w-full"

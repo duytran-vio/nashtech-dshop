@@ -17,6 +17,8 @@ const AdminHome = () => {
       message.error("You don't have permission to access this page");
       return <Navigate to={Path.ADMIN_LOGIN} />;
     }
+
+    // handle old admin user with invalid token
   }
   else {
     message.error("Please login first");

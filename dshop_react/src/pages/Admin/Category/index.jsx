@@ -38,6 +38,7 @@ const AdminCategory = () => {
     try {
       await addCategory(newCategory);
       mutate();
+      message.success("Category added successfully");
     } catch (error) {
       message.error(error.message);
     }
@@ -47,6 +48,7 @@ const AdminCategory = () => {
     try {
       await updateCategory(id, updatedCategory);
       mutate();
+      message.success("Category updated successfully");
     } catch (error) {
       message.error(error.message);
     }

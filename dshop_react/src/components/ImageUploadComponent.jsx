@@ -15,7 +15,6 @@ const beforeUpload = (file) => {
   return isJpgOrPng && isLt2M;
 };
 const ImageUploadComponent = (props) => {
-  console.log(props.fileList);
   const uploadImage = async (options) => {
     const { onSuccess, onError, file, onProgress } = options;
 
@@ -37,9 +36,10 @@ const ImageUploadComponent = (props) => {
   };
 
   const handleOnChange = ({ file, fileList, event }) => {
-    console.log(fileList);
+    // console.log(fileList);
     props.setFileList(fileList);
   };
+
 
   return (
     <>

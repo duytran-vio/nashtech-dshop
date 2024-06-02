@@ -26,8 +26,12 @@ const CategoryUpdate = (props) => {
       categoryName: props.currentCategory.categoryName,
     });
     if (props.currentCategory.image) {
-      console.log("props.currentCategory.image", props.currentCategory.image);
-      setFileList([{...props.currentCategory.image, uid: props.currentCategory.image.id}]);
+      setFileList([
+        {
+          ...props.currentCategory.image,
+          response: { id: props.currentCategory.image.id },
+        },
+      ]);
     } else {
       setFileList([]);
     }
@@ -36,7 +40,7 @@ const CategoryUpdate = (props) => {
   var isNewCategory = props.currentCategory.id === null;
 
   const handleOnFinish = (values) => {
-    if (fileList.length > 0){
+    if (fileList.length > 0) {
       values.imageId = fileList[0].response.id;
     }
     if (isNewCategory) {

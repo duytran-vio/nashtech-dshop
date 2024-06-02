@@ -7,6 +7,8 @@ import {
   productsEndpoint,
 } from "../../../services/productService";
 import useSWR from "swr";
+import { useNavigate } from "react-router-dom";
+import { Path } from "../../../utils/constant";
 
 const items = [
   {
@@ -48,6 +50,8 @@ const ProductList = () => {
     size: initPageSize,
   });
 
+  const navigate = useNavigate();
+
   const {
     data: response,
     error,
@@ -80,6 +84,10 @@ const ProductList = () => {
 
   if (error) {
     message.error("Failed to fetch products");
+  }
+
+  const handleEditProduct = (id) => {
+    navigate(`${Path.ADMIN_PRODUCTS}/${id}`);
   }
 
   const columns = [
@@ -127,7 +135,7 @@ const ProductList = () => {
       key: "key",
       render: (record) => (
         <Space size="middle">
-          <Button type="primary">Edit</Button>
+          <Button type="primary" onClick={() => handleEditProduct(record.id)}>Edit</Button>
           <Button danger onClick={() => handleDeleteProduct(record.id)}>
             Delete
           </Button>
