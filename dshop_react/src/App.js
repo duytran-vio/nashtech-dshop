@@ -7,6 +7,9 @@ import AdminCategory from "./pages/Admin/Category";
 import AdminCustomer from "./pages/Admin/Customer";
 import { Path } from "./utils/constant";
 import AdminProductDetail from "./pages/Admin/Product/ProductDetail";
+import CustomerHome from "./pages/Customer/Home";
+import CustomerLogin from "./pages/Customer/Login";
+import CustomerRegister from "./pages/Customer/Register";
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
         </Route>
 
         {/* user routing */}
+        <Route path={Path.CUSTOMER_LOGIN} element={<CustomerLogin />} />
+        <Route path={Path.CUSTOMER_REGISTER} element={<CustomerRegister />} />
+        <Route path={Path.CUSTOMER_ROOT} element={<CustomerHome />} />
       </Routes>
     </Router>
   );

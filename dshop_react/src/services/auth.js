@@ -26,12 +26,9 @@ export const sendLogout = () => {
 };
 
 export const sendRegister = async (userData) => {
-  try {
+    userData.roleId = 2;
     const response = await api.post(`${authEndpoint}/register`, userData);
     return response.data;
-  } catch (error) {
-    throw new Error("Registration failed");
-  }
 };
 
 // export const getCurrentUser = async () => {

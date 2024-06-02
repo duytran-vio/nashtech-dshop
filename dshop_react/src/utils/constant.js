@@ -6,6 +6,10 @@ export const Path = {
     ADMIN_CATEGORIES: "/admin/categories",
     ADMIN_CUSTOMERS: "/admin/customers",
     ADMIN_NEW_PRODUCT: "/admin/new-product",
+
+    CUSTOMER_ROOT: "/",
+    CUSTOMER_LOGIN: "/login",
+    CUSTOMER_REGISTER: "/register",
 }
 
 export const Role = {
