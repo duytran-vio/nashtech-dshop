@@ -104,7 +104,7 @@ const AdminProductDetail = () => {
     } catch (error) {
       message.error(error.message);
     }
-  }
+  };
 
   const handleOnFinish = () => {
     product.imageIds = imageList.map((image) => image.response.id);
@@ -116,7 +116,7 @@ const AdminProductDetail = () => {
   };
 
   const handleOnValuesChange = (changedValues, allValues) => {
-    setProduct(allValues);
+    setProduct({...product,  ...changedValues});
   };
 
   return (
@@ -166,12 +166,24 @@ const AdminProductDetail = () => {
         <div>
           <Select
             options={status}
-            defaultValue={status.find((item) => item.value === product.status)}
+            // defaultValue={product.status}
+            value={product.status}
             className="w-full"
+            onChange={(value) => {
+              setProduct({ ...product, status: value });
+            }}
           ></Select>
         </div>
 
-        <Checkbox className="my-2">Is Featured</Checkbox>
+        <Checkbox
+          className="my-2"
+          checked={product.isFeatured} 
+          onChange={(event) => {
+            setProduct({ ...product, isFeatured: event.target.checked });
+          }}
+        >
+          Is Featured
+        </Checkbox>
 
         <Button
           className="w-full"

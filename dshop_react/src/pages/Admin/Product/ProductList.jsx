@@ -63,7 +63,6 @@ const ProductList = () => {
     getProducts,
     {
       onSuccess: (data) => {
-        console.log(data);
         data.content = data.content.map((product) => {
           return {
             ...product,

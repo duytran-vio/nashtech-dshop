@@ -10,6 +10,8 @@ export const Path = {
     CUSTOMER_ROOT: "/",
     CUSTOMER_LOGIN: "/login",
     CUSTOMER_REGISTER: "/register",
+    CUSTOMER_HOMEPAGE: "/homepage",
+    CUSTOMER_PRODUCTS: "/products",
 }
 
 export const Role = {

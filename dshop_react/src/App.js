@@ -7,9 +7,12 @@ import AdminCategory from "./pages/Admin/Category";
 import AdminCustomer from "./pages/Admin/Customer";
 import { Path } from "./utils/constant";
 import AdminProductDetail from "./pages/Admin/Product/ProductDetail";
-import CustomerHome from "./pages/Customer/Home";
+import CustomerRoot from "./pages/Customer/Root";
 import CustomerLogin from "./pages/Customer/Login";
 import CustomerRegister from "./pages/Customer/Register";
+import CustomerHomePage from "./pages/Customer/HomePage";
+import CustomerProductList from "./pages/Customer/Products";
+import CustomerProductDetail from "./pages/Customer/ProductDetail";
 
 function App() {
   return (
@@ -28,7 +31,12 @@ function App() {
         {/* user routing */}
         <Route path={Path.CUSTOMER_LOGIN} element={<CustomerLogin />} />
         <Route path={Path.CUSTOMER_REGISTER} element={<CustomerRegister />} />
-        <Route path={Path.CUSTOMER_ROOT} element={<CustomerHome />} />
+        <Route path={Path.CUSTOMER_ROOT} element={<CustomerRoot />} >
+          <Route path={Path.CUSTOMER_HOMEPAGE} element={<CustomerHomePage />} />
+          <Route path={Path.CUSTOMER_PRODUCTS} element={<CustomerProductList />} >
+            <Route path=":id" element={<CustomerProductDetail />} />
+          </Route>
+        </Route>
       </Routes>
     </Router>
   );
