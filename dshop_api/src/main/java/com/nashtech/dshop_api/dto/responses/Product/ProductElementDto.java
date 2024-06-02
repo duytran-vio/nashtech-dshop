@@ -19,4 +19,5 @@ public class ProductElementDto {
     private StatusType status;
     private Boolean isFeatured;
     private Long stock;
+    private String thumbnailUrl;
 }

@@ -57,14 +57,18 @@ const ProductList = () => {
     error,
     isLoading,
     isFetching,
-    mutate
+    mutate,
   } = useSWR(
     { url: productsEndpoint, params: { filter: filter } },
     getProducts,
     {
       onSuccess: (data) => {
+        console.log(data);
         data.content = data.content.map((product) => {
-          return { ...product, key: product.id };
+          return {
+            ...product,
+            key: product.id,
+          };
         });
       },
     }
@@ -76,8 +80,7 @@ const ProductList = () => {
       // mutate({ url: productsEndpoint, params: { filter: filter } });
       mutate();
       message.success("Delete product success");
-    }
-    catch (e) {
+    } catch (e) {
       message.error(e.message);
     }
   };
@@ -88,12 +91,12 @@ const ProductList = () => {
 
   const handleEditProduct = (id) => {
     navigate(`${Path.ADMIN_PRODUCTS}/${id}`);
-  }
+  };
 
   const columns = [
     {
       title: "Product",
-      dataIndex: "product",
+      dataIndex: "thumbnailUrl",
       key: "img_url",
       render: (url) => <img src={url} alt="productImg" className="size-14" />,
     },
@@ -135,7 +138,9 @@ const ProductList = () => {
       key: "key",
       render: (record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleEditProduct(record.id)}>Edit</Button>
+          <Button type="primary" onClick={() => handleEditProduct(record.id)}>
+            Edit
+          </Button>
           <Button danger onClick={() => handleDeleteProduct(record.id)}>
             Delete
           </Button>
@@ -145,7 +150,11 @@ const ProductList = () => {
   ];
 
   const onChangeStatus = (e) => {
-    setFilter({ ...filter, status: e.key === "ALL" ? undefined : e.key, page: 0});
+    setFilter({
+      ...filter,
+      status: e.key === "ALL" ? undefined : e.key,
+      page: 0,
+    });
   };
 
   const handleOnChangePage = async (page, pageSize) => {

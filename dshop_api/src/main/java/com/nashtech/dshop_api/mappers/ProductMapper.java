@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nashtech.dshop_api.data.entities.Image;
@@ -26,6 +27,7 @@ public abstract class ProductMapper {
     public abstract ProductDetailDto toProductDetailDto(Product product);
 
     @Mapping(target = "categoryId", source = "category.id")
+    @Mapping(target = "thumbnailUrl", source = "images", qualifiedByName = "toThumbnailUrl")
     public abstract ProductElementDto toProductElementDto(Product product);
 
 
@@ -48,5 +50,16 @@ public abstract class ProductMapper {
 
     public List<ImageUploadResponse> toImageUploadResponse(List<Image> images) {
         return images.stream().map(imageMapper::toImageUploadResponse).collect(Collectors.toList());
+    }
+
+    @Named("toThumbnailUrl")
+    public String toThumbnailUrl(List<Image> images) {
+        // return images.stream().filter(Image::getIsThumb).findFirst().map(Image::getUrl).orElse(null);
+        if (!images.isEmpty()){
+            return images.get(0).getUrl();
+        }
+        else{
+            return "";
+        }
     }
 }
