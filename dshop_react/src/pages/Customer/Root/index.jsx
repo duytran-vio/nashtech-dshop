@@ -1,9 +1,11 @@
-import { Button, Layout } from "antd";
+import { Avatar, Layout } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import shopLogo from "../../../assets/shopLogo.png";
 import Search from "antd/es/transfer/search";
+import { Path } from "../../../utils/constant";
+import { UserOutlined } from "@ant-design/icons";
 
 const CustomerRoot = () => {
   return (
@@ -13,7 +15,9 @@ const CustomerRoot = () => {
           Logout
         </Button> */}
         <div className="col-span-1 w-8">
-          <img src={shopLogo} alt="shopLogo" />
+          <Link to={Path.CUSTOMER_HOMEPAGE}>
+            <img src={shopLogo} alt="shopLogo" />
+          </Link>
         </div>
         <div className="col-start-5 col-span-5">
           <Search
@@ -25,14 +29,14 @@ const CustomerRoot = () => {
           />
         </div>
         <div className="w-8 col-end-13 justify-self-end">
-          <img src={shopLogo} alt="shopLogo" />
+          <Avatar icon={<UserOutlined />}/> 
         </div>
       </Header>
       <Layout>
         <div className="grid grid-cols-12 ">
-        <Content className="bg-white col-start-3 col-span-8 py-10 ">
-          <Outlet />
-        </Content>
+          <Content className="bg-white col-start-3 col-span-8 py-10 ">
+            <Outlet />
+          </Content>
         </div>
       </Layout>
     </Layout>

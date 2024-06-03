@@ -14,15 +14,6 @@ import {
 import ProductCard from "../../../components/ProductCard";
 import Title from "antd/es/typography/Title";
 
-const data = [];
-
-for (let i = 0; i < 16; i++) {
-  data.push({
-    title: `Title ${i}`,
-    url: "http://localhost:8080/uploads/5e94a29e-cef5-4086-aff0-87f8727d3836-images.png",
-  });
-}
-
 const initPageSize = 8;
 
 const CustomerHomePage = () => {
@@ -78,6 +69,7 @@ const CustomerHomePage = () => {
           renderItem={(item) => (
             <Link
               to={Path.CUSTOMER_PRODUCTS}
+              state={{ categoryId: item.id }}
               className="flex flex-col items-center px-5"
             >
               <Avatar size={64} src={item.image?.url} alt="category" />

@@ -33,9 +33,8 @@ function App() {
         <Route path={Path.CUSTOMER_REGISTER} element={<CustomerRegister />} />
         <Route path={Path.CUSTOMER_ROOT} element={<CustomerRoot />} >
           <Route path={Path.CUSTOMER_HOMEPAGE} element={<CustomerHomePage />} />
-          <Route path={Path.CUSTOMER_PRODUCTS} element={<CustomerProductList />} >
-            <Route path=":id" element={<CustomerProductDetail />} />
-          </Route>
+          <Route path={Path.CUSTOMER_PRODUCTS} element={<CustomerProductList />}/>
+          <Route path={Path.CUSTOMER_PRODUCTS + "/:id"} element={<CustomerProductDetail />} />
         </Route>
       </Routes>
     </Router>
