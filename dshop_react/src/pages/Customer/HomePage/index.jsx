@@ -1,7 +1,5 @@
-import { Avatar, Card, List } from "antd";
+import { Avatar, List, Pagination } from "antd";
 import React, { useState } from "react";
-import shopLogo from "../../../assets/shopLogo.png";
-import { UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Path } from "../../../utils/constant";
 import useSWR from "swr";
@@ -9,7 +7,12 @@ import {
   categoriesEndpoint,
   getCategories,
 } from "../../../services/categoryService";
-import CategoryRow from "./CategoryRow";
+import {
+  getProducts,
+  productsEndpoint,
+} from "../../../services/productService";
+import ProductCard from "../../../components/ProductCard";
+import Title from "antd/es/typography/Title";
 
 const data = [];
 
@@ -20,18 +23,44 @@ for (let i = 0; i < 16; i++) {
   });
 }
 
-const CustomerHomePage = () => {
-  const [categories, setCategories] = useState([]);
-  const{data, isLoading} = useSWR(categoriesEndpoint, getCategories, {
-    onSuccess: (data) => {
-      data.sort((a, b) =>
-        a.categoryName.localeCompare(b.categoryName.toLowerCase())
-      );
-      setCategories(data);
-    },
-  });
+const initPageSize = 8;
 
-  if (isLoading) return <div>Loading...</div>;
+const CustomerHomePage = () => {
+  const [page, setPage] = useState({
+    page: 0,
+    size: initPageSize,
+  });
+  const { data: categories, isLoading } = useSWR(
+    categoriesEndpoint,
+    getCategories,
+    {
+      onSuccess: (data) => {
+        data.map((category) => ({ ...category, key: category.id }));
+        data.sort((a, b) =>
+          a.categoryName.localeCompare(b.categoryName.toLowerCase())
+        );
+      },
+    }
+  );
+
+  const { data: featuredProducts, isLoading: isLoadingProducts } = useSWR(
+    {
+      url: productsEndpoint,
+      params: {
+        filter: {
+          isFeatured: true,
+          ...page,
+        },
+      },
+    },
+    getProducts,
+  );
+
+  const handleOnChangePage = async (page, pageSize) => {
+    setPage({ page: page - 1, size: pageSize });
+  };
+
+  if (isLoading || isLoadingProducts) return <div>Loading...</div>;
   return (
     <div className="px-10">
       <div className="flex justify-center">
@@ -57,11 +86,21 @@ const CustomerHomePage = () => {
           )}
         />
       </div>
-        {categories.map((category) => {
-            return <CategoryRow category={category} />;
-        
-        })}
-      
+      <div>
+        <Title level={2}> Featured Products</Title>
+        </div>
+      <div className="grid grid-cols-4 gap-5">
+        {featuredProducts.content.map((product) => (
+          <ProductCard product={product} key={product.id} />
+        ))}
+      </div>
+      <Pagination
+        className="flex justify-center my-5"
+        defaultCurrent={page.page + 1}
+        total={featuredProducts?.totalElements}
+        defaultPageSize={initPageSize}
+        onChange={handleOnChangePage}
+      />
     </div>
   );
 };

@@ -47,9 +47,10 @@ const AdminProductDetail = () => {
   const params = useParams();
   const navigate = useNavigate();
   const isNewProduct = !params.id;
+  const adminInfo = JSON.parse(localStorage.getItem("user"));
 
   const [form] = Form.useForm();
-  const [product, setProduct] = useState(initialProduct);
+  const [product, setProduct] = useState({...initialProduct, createUserId: adminInfo.id});
   const [categories, setCategories] = useState([]);
   const [imageList, setImageList] = useState([]);
 
@@ -83,8 +84,6 @@ const AdminProductDetail = () => {
 
   const handleAddProduct = async (product) => {
     try {
-      const adminInfo = JSON.parse(localStorage.getItem("user"));
-      setProduct({ ...product, createUserId: adminInfo.id });
       await createProduct(product);
       message.success("Product created successfully");
       thisProductMutate();
