@@ -32,13 +32,13 @@ const CustomerRoot = () => {
           <Avatar icon={<UserOutlined />}/> 
         </div>
       </Header>
-      <Layout>
-        <div className="grid grid-cols-12 ">
-          <Content className="bg-white col-start-3 col-span-8 py-10 ">
+      <div className=" flex justify-center">
+        <div className=" w-3/4">
+          <Content className="bg-white py-10  ">
             <Outlet />
           </Content>
         </div>
-      </Layout>
+      </div>
     </Layout>
   );
 };

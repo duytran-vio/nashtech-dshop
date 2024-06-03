@@ -17,15 +17,12 @@ const CustomerProductList = () => {
   const location = useLocation();
   const {categoryId} = location.state;
   
-  console.log("filter by categoryId: ", categoryId);
   const [filter, setFilter] = useState({
     categoryId: categoryId,
     status: StatusType.ACTIVE,
     page: 0,
     size: initPageSize,
   });
-  console.log("filter: ", filter);
-
 
   const {
     data: categories,

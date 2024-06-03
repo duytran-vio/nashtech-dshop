@@ -7,7 +7,7 @@ import { Default, Path } from "../utils/constant";
 const ProductCard = (props) => {
   return (
     <Link to={Path.CUSTOMER_PRODUCTS + "/" + props.product.id}>
-      <div className="border rounded-lg w-60">
+      <div className="border rounded-lg w-full">
         <img
           className="w-full rounded-lg border"
           style={{ height: "200px" }}
