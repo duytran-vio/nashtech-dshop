@@ -46,9 +46,9 @@ public class UserServiceImpl implements UserService{
         };
     }
 
-    public static Specification<User> hasOnlineStatus(StatusType onlineStatus) {
+    public static Specification<User> hasEnableStatus(Boolean enableStatus) {
         return (root, query, builder) -> {
-            return builder.equal(root.get(User_.ONLINE_STATUS), onlineStatus);
+            return builder.equal(root.get(User_.ENABLE_STATUS), enableStatus);
         };
     }
 
@@ -66,9 +66,9 @@ public class UserServiceImpl implements UserService{
         if (request.getRole() != null) {
             spec = spec.and(hasRole(request.getRole()));
         }
-        // if (request.getOnlineStatus() != null) {
-        //     spec = spec.and(hasOnlineStatus(request.getOnlineStatus()));
-        // }
+        if (request.getEnableStatus() != null) {
+            spec = spec.and(hasEnableStatus(request.getEnableStatus()));
+        }
 
         var users = userRepository.findAll(spec, pageable)
                                     .map(mapper::toDto);
