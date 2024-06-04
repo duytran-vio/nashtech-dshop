@@ -3,6 +3,7 @@ package com.nashtech.dshop_api.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nashtech.dshop_api.dto.requests.CategoryCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.responses.CategoryDto;
 import com.nashtech.dshop_api.services.CategoryService;
+import com.nashtech.dshop_api.utils.Constant;
 
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/categories")
-public class CategoryController {
+public class CategoryController{
     
     private final CategoryService categoryService;
 
@@ -47,7 +49,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<Object> createCategory(@Valid @RequestBody CategoryCreateUpdateRequest categoryDto){
         CategoryDto category = categoryService.createCategory(categoryDto);
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
                             .body(category);
     }
 
@@ -63,6 +65,6 @@ public class CategoryController {
     public ResponseEntity<Object> deleteCategory(@PathVariable("id") Long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.ok()
-                            .build();
+                            .body(Constant.DELETE_SUCCESS_MSG);
     }
 }

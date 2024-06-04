@@ -7,9 +7,8 @@ import com.nashtech.dshop_api.data.entities.Card;
 import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.repositories.CardRepository;
 import com.nashtech.dshop_api.dto.responses.CustomerInfo.CardDto;
-import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.CardAlreadyExistException;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.CardNotFoundException;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.UserNotFoundException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.CardMapper;
 import com.nashtech.dshop_api.services.CardService;
 import com.nashtech.dshop_api.services.UserService;
@@ -34,9 +33,9 @@ public class CardServiceImpl implements CardService{
         return cardRepository.findByUserId(userId)
                                 .orElseThrow(() -> {
                                     if (!userService.isUserExist(userId)) {
-                                        return new UserNotFoundException(userId);
+                                        return new ResourceNotFoundException(User.class.getSimpleName(), "id", userId);
                                     }
-                                    return new CardNotFoundException(userId);
+                                    return new ResourceNotFoundException(Card.class.getSimpleName(), "userId", userId);
                                 });
     }
 
@@ -48,10 +47,10 @@ public class CardServiceImpl implements CardService{
 
     @Override
     public CardDto addCard(Long userId, CardDto cardDto) {
-        User user = userService.getUserEntityById(userId);
         if (cardRepository.findByUserId(userId).isPresent()) {
-            throw new CardAlreadyExistException(userId);
+            throw new ResourceAlreadyExistException(Card.class.getSimpleName(), "userId", userId);
         }
+        User user = userService.getUserEntityById(userId);
         Card card = mapper.toEntity(cardDto);
         card.setUser(user);
         card = cardRepository.save(card);

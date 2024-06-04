@@ -7,6 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,8 +19,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.nashtech.dshop_api.dto.responses.ErrorResponse;
-import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.ResourceAlreadyExistException;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.ResourceNotFoundException;
+import com.nashtech.dshop_api.exceptions.InvalidTokenException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
+import com.nashtech.dshop_api.exceptions.UploadFileFailedException;
+import com.nashtech.dshop_api.utils.Constant;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -58,5 +65,48 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var error = ErrorResponse.builder().code(HttpStatus.CONFLICT.value())
             .message(ex.getCause().toString()).build();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class, InvalidTokenException.class})
+    protected ResponseEntity<ErrorResponse> handleAuthenticationException(Exception ex) {
+        String msg = ex instanceof InvalidTokenException ? ex.getMessage() : Constant.FAILED_AUTHORIZATION_MSG;
+        var error = ErrorResponse.builder().code(HttpStatus.UNAUTHORIZED.value())
+            .message(msg).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(UploadFileFailedException.class)
+    protected ResponseEntity<ErrorResponse> handleUploadFileFailedException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.EXPECTATION_FAILED.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.BAD_REQUEST.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(AccountStatusException.class)
+    protected ResponseEntity<ErrorResponse> handleAccountStatusException(AccountStatusException ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.FORBIDDEN.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.FORBIDDEN.value())
+            .message(Constant.ACCESS_DENIED_MSG).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleOtherException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

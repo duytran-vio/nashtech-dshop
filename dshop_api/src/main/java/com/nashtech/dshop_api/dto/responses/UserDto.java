@@ -1,5 +1,7 @@
 package com.nashtech.dshop_api.dto.responses;
 
+import com.nashtech.dshop_api.data.entities.StatusType;
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,5 +13,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
-    // private Long infoId;
+    // private StatusType onlineStatus;
+    private Boolean enableStatus;
+    private String role;
 }

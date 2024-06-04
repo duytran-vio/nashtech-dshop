@@ -16,4 +16,6 @@ public class CategoryCreateUpdateRequest {
     private String categoryName;
 
     private Long parentId;
+
+    private Long imageId;
 }

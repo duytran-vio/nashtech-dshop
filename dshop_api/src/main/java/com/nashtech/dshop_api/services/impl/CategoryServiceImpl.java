@@ -6,25 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nashtech.dshop_api.data.entities.Category;
+import com.nashtech.dshop_api.data.entities.Image;
 import com.nashtech.dshop_api.data.repositories.CategoryRepository;
 import com.nashtech.dshop_api.dto.requests.CategoryCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.responses.CategoryDto;
-import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException.CategoryAlreadyExistException;
-import com.nashtech.dshop_api.exceptions.ResourceNotFoundException.CategoryNotFoundException;
+import com.nashtech.dshop_api.exceptions.ResourceAlreadyExistException;
+import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.CategoryMapper;
 import com.nashtech.dshop_api.services.CategoryService;
+import com.nashtech.dshop_api.services.ImageService;
+
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
     
     private final CategoryRepository categoryRepository;
     private final CategoryMapper mapper;
+    private final ImageService imageService;
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository,
-                                CategoryMapper mapper) {
+                                CategoryMapper mapper, ImageService imageService) {
         this.categoryRepository = categoryRepository;
         this.mapper = mapper;
+        this.imageService = imageService;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     public Category getCategoryEntityById(Long id) {
         return categoryRepository.findById(id)
-                                .orElseThrow(() -> new CategoryNotFoundException(id));
+                                .orElseThrow(() -> new ResourceNotFoundException(Category.class.getSimpleName(), "id", id));
     }
 
     @Override
@@ -51,40 +56,58 @@ public class CategoryServiceImpl implements CategoryService{
         if (parentId == null) {
             category.setParentCategory(null);
             category.setLayerNum(Long.valueOf(0));
+            return;
         }
-        else{
-            Category parentCategory = this.getCategoryEntityById(parentId);
-            category.setParentCategory(parentCategory);
-            category.setLayerNum(parentCategory.getLayerNum() + 1);
+        if (category.getParentCategory() != null && category.getParentCategory().getId() == parentId) {
+            return;
         }
+        Category parentCategory = this.getCategoryEntityById(parentId);
+        category.setParentCategory(parentCategory);
+        category.setLayerNum(parentCategory.getLayerNum() + 1);
+    }
+    
+    private void updateCategoryImage(Category category, Long imageId) {
+        if (imageId == null) {
+            category.setImage(null);
+            return;
+        }
+        if (category.getImage() != null && category.getImage().getId() == imageId) {
+            return;
+        }
+        Image image = imageService.getEntityById(imageId);
+        category.setImage(image);
     }
 
     @Override
     public CategoryDto createCategory(CategoryCreateUpdateRequest categoryRequest) {
         if (categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new CategoryAlreadyExistException(categoryRequest.getCategoryName());
+            throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name", categoryRequest.getCategoryName());
         }
 
         Category category = mapper.toEntityFromRequest(categoryRequest);
         updateParentCategory(category, categoryRequest.getParentId());
+        
+        updateCategoryImage(category, categoryRequest.getImageId());
 
         category = categoryRepository.save(category);
         return mapper.toDto(category);
     }
 
     @Override
-    public CategoryDto updateCategory(Long id, CategoryCreateUpdateRequest categoryRequest) { 
+    public CategoryDto updateCategory(Long id, CategoryCreateUpdateRequest categoryRequest) {
         Category category = getCategoryEntityById(id);
 
-        if (!category.getCategoryName().equals(categoryRequest.getCategoryName())  && categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
-            throw new CategoryAlreadyExistException(categoryRequest.getCategoryName());
+        if (!category.getCategoryName().equals(categoryRequest.getCategoryName())
+                && categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
+            throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name",
+                    categoryRequest.getCategoryName());
         }
 
         category = mapper.updateEntityFromRequest(categoryRequest, category);
 
-        if (categoryRequest.getParentId() != category.getParentCategory().getId()){
-            updateParentCategory(category, categoryRequest.getParentId());
-        }
+        updateParentCategory(category, categoryRequest.getParentId());
+
+        updateCategoryImage(category, categoryRequest.getImageId());
 
         category = categoryRepository.save(category);
         return mapper.toDto(category);
