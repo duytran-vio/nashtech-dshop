@@ -31,24 +31,24 @@ const AdminCustomer = () => {
   return (
     <div className="m-5">
       <div className="flex justify-end">
-        <div className="w-1/6">
+        {/* <div className="w-1/6">
           <Search
             placeholder="Search"
             allowClear
             onSearch={onSearch}
           />
-        </div>
+        </div> */}
       </div>
       <div>
         <Card className="my-5">
-          <div>
+          {/* <div>
             <Menu
               onClick={onClick}
               selectedKeys={[current]}
               mode="horizontal"
               items={items}
             />
-          </div>
+          </div> */}
           <div className="m-3">
             <CustomerList></CustomerList>
           </div>
