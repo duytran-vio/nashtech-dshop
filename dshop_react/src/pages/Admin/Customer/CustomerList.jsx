@@ -1,4 +1,4 @@
-import { Button, Space, Table, Tag, message } from "antd";
+import { Button, Modal, Space, Table, Tag, message } from "antd";
 import React, { useState } from "react";
 import useSWR from "swr";
 import { getUsers, updateUser, userEndPoint } from "../../../services/userService";
@@ -25,14 +25,19 @@ const CustomerList = () => {
   if (isLoading) return <div>Loading...</div>;
 
   const setUserEnable = async (user, enableStatus) => {
-    try{
-      await updateUser(user.id, { enableStatus: enableStatus });
-      mutate();
-      message.success(`Set user enable status to "${enableStatus}" successfully!`);
-    }
-    catch(error){
-      message.error(error.message);
-    }
+    Modal.confirm({
+      title: `Do you want to ${enableStatus ? "enable" : "disable"} user "${user.username}"?`,
+      onOk: async () => {
+        try{
+          await updateUser(user.id, { enableStatus: enableStatus });
+          mutate();
+          message.success(`${enableStatus ? "Enable" : "Disable"} user "${user.username}" successfully!`);
+        }
+        catch(error){
+          message.error(error.message);
+        }
+      },
+    });
   }
 
   const columns = [

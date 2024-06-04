@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import Title from "antd/es/typography/Title";
@@ -40,14 +40,19 @@ const CategoryUpdate = (props) => {
   var isNewCategory = props.currentCategory.id === null;
 
   const handleOnFinish = (values) => {
-    if (fileList.length > 0) {
-      values.imageId = fileList[0].response.id;
-    }
-    if (isNewCategory) {
-      props.addCategory(values);
-    } else {
-      props.updateCategory(props.currentCategory.id, values);
-    }
+    Modal.confirm({
+      title: `Do you want to save this category?`,
+      onOk: () => {
+        if (fileList.length > 0) {
+          values.imageId = fileList[0].response.id;
+        }
+        if (isNewCategory) {
+          props.addCategory(values);
+        } else {
+          props.updateCategory(props.currentCategory.id, values);
+        }
+      }
+    });
   };
 
   return (
