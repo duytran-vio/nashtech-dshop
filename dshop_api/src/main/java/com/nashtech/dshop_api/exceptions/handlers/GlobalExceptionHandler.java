@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -88,11 +89,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleOtherException(Exception ex) {
-        var error = ErrorResponse.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-            .message(Constant.INTERNAL_SERVER_EXCEPTION_MSG).build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    @ExceptionHandler(AccountStatusException.class)
+    protected ResponseEntity<ErrorResponse> handleAccountStatusException(AccountStatusException ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.FORBIDDEN.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -100,5 +101,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var error = ErrorResponse.builder().code(HttpStatus.FORBIDDEN.value())
             .message(Constant.ACCESS_DENIED_MSG).build();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ErrorResponse> handleOtherException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

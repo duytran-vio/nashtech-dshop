@@ -47,6 +47,9 @@ public class User extends AuditEntity<Long> implements UserDetails{
     @Column(name = "online_status_id")
     private StatusType onlineStatus;
 
+    @Column(name = "enable_status")
+    private Boolean enableStatus;
+
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
 
@@ -75,6 +78,6 @@ public class User extends AuditEntity<Long> implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enableStatus;
     }
 }

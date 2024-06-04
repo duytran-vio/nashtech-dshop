@@ -31,9 +31,12 @@ public class SecurityConfiguration {
     private String baseUrl;
 
     private final CustomerAccessDeniedHandler customerAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
-    public SecurityConfiguration(CustomerAccessDeniedHandler customerAccessDeniedHandler) {
+    public SecurityConfiguration(CustomerAccessDeniedHandler customerAccessDeniedHandler, 
+                                CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
         this.customerAccessDeniedHandler = customerAccessDeniedHandler;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
     }
 
     @Bean
@@ -69,6 +72,7 @@ public class SecurityConfiguration {
                     
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(this.customerAccessDeniedHandler))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(this.customAuthenticationEntryPoint))
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

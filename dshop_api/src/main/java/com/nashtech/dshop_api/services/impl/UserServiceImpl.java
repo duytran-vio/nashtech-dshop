@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.nashtech.dshop_api.data.entities.Role_;
 import com.nashtech.dshop_api.data.entities.StatusType;
 import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.entities.User_;
 import com.nashtech.dshop_api.data.repositories.UserRepository;
 import com.nashtech.dshop_api.dto.requests.User.UserGetRequest;
+import com.nashtech.dshop_api.dto.requests.User.UserUpdateRequest;
 import com.nashtech.dshop_api.dto.responses.UserDto;
 import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
@@ -30,6 +32,12 @@ public class UserServiceImpl implements UserService{
                             UserMapper mapper) {
         this.userRepository = userRepository;
         this.mapper = mapper;
+    }
+
+    public static Specification<User> hasRole(String role) {
+        return (root, query, builder) -> {
+            return builder.equal(root.get(User_.ROLE).get(Role_.ROLE_NAME), role);
+        };
     }
 
     public static Specification<User> likeUsername(String username) {
@@ -55,9 +63,12 @@ public class UserServiceImpl implements UserService{
         if (request.getUsername() != null) {
             spec = spec.and(likeUsername(request.getUsername()));
         }
-        if (request.getOnlineStatus() != null) {
-            spec = spec.and(hasOnlineStatus(request.getOnlineStatus()));
+        if (request.getRole() != null) {
+            spec = spec.and(hasRole(request.getRole()));
         }
+        // if (request.getOnlineStatus() != null) {
+        //     spec = spec.and(hasOnlineStatus(request.getOnlineStatus()));
+        // }
 
         var users = userRepository.findAll(spec, pageable)
                                     .map(mapper::toDto);
@@ -93,5 +104,13 @@ public class UserServiceImpl implements UserService{
         var user = userRepository.findByUsername(username)
                                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));  
         return user;
+    }
+
+    @Override
+    public UserDto updateUser(Long id, UserUpdateRequest request) {
+        User user = this.getUserEntityById(id);
+        user = mapper.toEntityFromUpdateRequest(request, user);
+        user = userRepository.save(user);
+        return mapper.toDto(user);
     }
 }

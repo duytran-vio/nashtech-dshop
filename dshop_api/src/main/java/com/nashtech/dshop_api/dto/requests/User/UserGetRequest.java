@@ -11,5 +11,7 @@ import lombok.Setter;
 @Getter
 public class UserGetRequest {
     private String username;
-    private StatusType onlineStatus;
+    private String role;
+    // private StatusType onlineStatus;
+    private Boolean enableStatus;
 }

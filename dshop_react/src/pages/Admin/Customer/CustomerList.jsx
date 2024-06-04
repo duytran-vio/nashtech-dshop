@@ -1,99 +1,80 @@
-import { Space, Table, Tag } from "antd";
-import React from "react";
+import { Button, Space, Table, Tag, message } from "antd";
+import React, { useState } from "react";
+import useSWR from "swr";
+import { getUsers, updateUser, userEndPoint } from "../../../services/userService";
+import { Role } from "../../../utils/constant";
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  getCheckboxProps: (record) => ({
-    disabled: record.name === "Disabled User",
-    // Column configuration not to be checked
-    name: record.name,
-  }),
-};
+
+const initPageSize = 5;
 
 const CustomerList = () => {
+  const [filter, setFilter] = useState({
+    role: Role.CUSTOMER,
+    page: 0,
+    size: initPageSize,
+    sort: "id"
+  });
+  const {
+    data: customers,
+    isLoading,
+    isError,
+    mutate,
+  } = useSWR({ url: userEndPoint, params: filter }, getUsers);
+
+  if (isLoading) return <div>Loading...</div>;
+
+  const setUserEnable = async (user, enableStatus) => {
+    try{
+      await updateUser(user.id, { enableStatus: enableStatus });
+      mutate();
+      message.success(`Set user enable status to "${enableStatus}" successfully!`);
+    }
+    catch(error){
+      message.error(error.message);
+    }
+  }
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Username",
+      dataIndex: "username",
+      key: "username",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Action",
+      key: "key",
+      render: (record) =>
+        record.enableStatus ? (
+          <Button danger onClick={() => setUserEnable(record, false)}>Disable</Button>
+        ) : (
+          <Button type="primary" onClick={() => setUserEnable(record, true)}>Enable</Button>
+        ),
+    },
+  ];
+
   return (
     <Table
-      rowSelection={{ type: "checkbox", ...rowSelection }}
       columns={columns}
-      dataSource={data}
+      dataSource={customers.content}
+      pagination={{
+        total: customers.totalElements,
+        pageSize: filter.size,
+        current: filter.page + 1,
+        onChange: (page, pageSize) => {
+          setFilter({ ...filter, page: page - 1 });
+        },
+      }}
     />
   );
 };

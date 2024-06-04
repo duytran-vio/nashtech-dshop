@@ -13,6 +13,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
-    private StatusType onlineStatus;
+    // private StatusType onlineStatus;
+    private Boolean enableStatus;
     private String role;
 }
