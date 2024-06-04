@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import {
+  buyProduct,
   getProductById,
   productsEndpoint,
 } from "../../../services/productService";
@@ -18,6 +19,7 @@ import {
   List,
   Rate,
   message,
+  Modal
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
@@ -27,6 +29,8 @@ import {
   getReviews,
   reviewsEndpoint,
 } from "../../../services/reviewService";
+// import confirm from "antd/es/modal/confirm";
+const { confirm } = Modal;
 
 const initReviewPageSize = 3;
 
@@ -47,6 +51,7 @@ const CustomerProductDetail = () => {
     data: product,
     isLoading,
     isError,
+    mutate: mutateProduct,
   } = useSWR(`${productsEndpoint}/${id}`, getProductById);
 
   const {
@@ -90,8 +95,25 @@ const CustomerProductDetail = () => {
     });
   };
 
+  const confirmBuy = () => {
+    confirm({
+      title: `Do you want to buy ${quantity} ${product.productName}?`,
+      okText: "Yes",
+      okType: "primary",
+      cancelText: "No",
+      onOk: async () => {
+        try {
+          await buyProduct(id, quantity);
+          message.success("Buy successfully");
+          mutateProduct();
+        } catch (error) {
+          message.error(error.message);
+        }
+      },
+    })
+  }
+
   const submitReview = (values) => {
-    console.log(values);
     const customer = JSON.parse(localStorage.getItem("user"));
     const review = {
       userId: customer.id,
@@ -170,8 +192,13 @@ const CustomerProductDetail = () => {
             </div>
           </div>
           <div className="my-5">
-            <Button type="primary" className="w-1/2">
-              Buy
+            <Button
+              type="primary"
+              className="w-1/2"
+              onClick={() => confirmBuy()}
+              disabled={product.stock === 0}
+            >
+              {product.stock === 0 ? "Out of Stock" : "Buy"}
             </Button>
           </div>
         </Card>

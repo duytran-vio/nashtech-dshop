@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.nashtech.dshop_api.data.entities.Product;
+import com.nashtech.dshop_api.dto.requests.Product.ProductBuyRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
 import com.nashtech.dshop_api.dto.responses.Product.ProductDetailDto;
@@ -20,4 +21,5 @@ public interface ProductService {
     public Product getProductEntityById(Long id);
     public boolean isProductExist(Long id);
     public void updateNewReviewRating(Product product, Long rating);
+    public ProductDetailDto buyProduct(ProductBuyRequest productBuyRequest);
 }

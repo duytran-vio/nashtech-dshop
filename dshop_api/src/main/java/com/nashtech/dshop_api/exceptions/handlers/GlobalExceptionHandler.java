@@ -81,6 +81,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(error);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<ErrorResponse> handleIllegalArgumentException(Exception ex) {
+        var error = ErrorResponse.builder().code(HttpStatus.BAD_REQUEST.value())
+            .message(ex.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleOtherException(Exception ex) {
         var error = ErrorResponse.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())

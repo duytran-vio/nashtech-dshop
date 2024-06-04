@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.GET, this.baseUrl + "/users/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/users/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, this.baseUrl + "/products/**").permitAll()
+                    .requestMatchers(HttpMethod.POST,this.baseUrl + "/products/buy").hasRole("CUSTOMER")
                     .requestMatchers(HttpMethod.POST, this.baseUrl + "/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, this.baseUrl + "/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/products/**").hasRole("ADMIN")

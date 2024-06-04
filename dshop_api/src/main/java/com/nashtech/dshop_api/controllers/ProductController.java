@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nashtech.dshop_api.dto.requests.Product.ProductBuyRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
 import com.nashtech.dshop_api.dto.responses.Product.ProductElementDto;
@@ -67,5 +68,12 @@ public class ProductController{
         productService.deleteProduct(id);
         return ResponseEntity.ok()
                             .body(Constant.DELETE_SUCCESS_MSG);
+    }
+
+    @PostMapping("/buy")
+    public ResponseEntity<Object> buyProduct(@Valid @RequestBody ProductBuyRequest productBuyRequest) {
+        var product = productService.buyProduct(productBuyRequest);
+        return ResponseEntity.ok()
+                            .body(product);
     }
 }

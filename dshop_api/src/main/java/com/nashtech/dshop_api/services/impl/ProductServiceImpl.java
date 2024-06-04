@@ -17,6 +17,7 @@ import com.nashtech.dshop_api.data.entities.Product_;
 import com.nashtech.dshop_api.data.entities.StatusType;
 import com.nashtech.dshop_api.data.entities.User;
 import com.nashtech.dshop_api.data.repositories.ProductRepository;
+import com.nashtech.dshop_api.dto.requests.Product.ProductBuyRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductCreateUpdateRequest;
 import com.nashtech.dshop_api.dto.requests.Product.ProductGetRequest;
 import com.nashtech.dshop_api.dto.responses.Product.ProductDetailDto;
@@ -28,12 +29,13 @@ import com.nashtech.dshop_api.services.CategoryService;
 import com.nashtech.dshop_api.services.ImageService;
 import com.nashtech.dshop_api.services.ProductService;
 import com.nashtech.dshop_api.services.UserService;
+import com.nashtech.dshop_api.utils.Constant;
 
 
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    static final String STOCK_EXCEPTION_MESSAGE = "Stock must be greater than or equal to current stock";
+    static final String STOCK_EXCEPTION_MESSAGE = "Input stock value must be greater than or equal to current stock";
     
     private ProductRepository productRepository;
     private ProductMapper mapper;
@@ -187,6 +189,18 @@ public class ProductServiceImpl implements ProductService{
         product.setAvgRating(newRating);
         product.setReviewNum(product.getReviewNum() + 1);
         productRepository.save(product);
+    }
+
+    @Override
+    public ProductDetailDto buyProduct(ProductBuyRequest productBuyRequest) {
+        var product = this.getProductEntityById(productBuyRequest.getId());
+        if (product.getStock() < productBuyRequest.getQuantity()){
+            throw new IllegalArgumentException(Constant.QUANTITY_EXCEED_STOCK);
+        }
+        product.setStock(product.getStock() - productBuyRequest.getQuantity());
+        product.setSoldNum(product.getSoldNum() + productBuyRequest.getQuantity());
+        product = productRepository.save(product);
+        return mapper.toProductDetailDto(product);
     }
 
 }
