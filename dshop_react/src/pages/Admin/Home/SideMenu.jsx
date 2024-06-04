@@ -16,10 +16,6 @@ const items = [
         
       },
       {
-        key: Path.ADMIN_NEW_PRODUCT,
-        label: 'Add New Product',
-      },
-      {
         key: Path.ADMIN_CATEGORIES,
         label: 'Categories',
       },

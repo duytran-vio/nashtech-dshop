@@ -1,4 +1,4 @@
-import { Button, Menu, Space, Table, Tag, message } from "antd";
+import { Button, Menu, Modal, Space, Table, Tag, message } from "antd";
 import React, { useEffect, useState } from "react";
 import shopLogo from "../../../assets/shopLogo.png";
 import {
@@ -8,7 +8,7 @@ import {
 } from "../../../services/productService";
 import useSWR from "swr";
 import { useNavigate } from "react-router-dom";
-import { Path } from "../../../utils/constant";
+import { Default, Path } from "../../../utils/constant";
 
 const items = [
   {
@@ -73,16 +73,23 @@ const ProductList = () => {
     }
   );
 
-  const handleDeleteProduct = async (id) => {
-    try {
-      await deleteProduct(id);
-      // mutate({ url: productsEndpoint, params: { filter: filter } });
-      mutate();
-      message.success("Delete product success");
-    } catch (e) {
-      message.error(e.message);
-    }
-  };
+  const handleDeleteProduct = (id, productName) => {
+    Modal.confirm({
+      title: `Are you sure you want to delete product "${productName}"?`,
+      onOk: async () => {
+        try {
+          await deleteProduct(id);
+          // mutate({ url: productsEndpoint, params: { filter: filter } });
+          mutate();
+          message.success("Delete product success");
+        } catch (e) {
+          message.error(e.message);
+        }
+      }
+    });
+  }
+  
+  
 
   if (error) {
     message.error("Failed to fetch products");
@@ -97,7 +104,7 @@ const ProductList = () => {
       title: "Product",
       dataIndex: "thumbnailUrl",
       key: "img_url",
-      render: (url) => <img src={url} alt="productImg" className="size-14" />,
+      render: (url) => <img src={url ? url : Default.PRODUCT_IMG} alt="productImg" className="size-14" />,
     },
     {
       title: "Name",
@@ -140,7 +147,7 @@ const ProductList = () => {
           <Button type="primary" onClick={() => handleEditProduct(record.id)}>
             Edit
           </Button>
-          <Button danger onClick={() => handleDeleteProduct(record.id)}>
+          <Button danger onClick={() => handleDeleteProduct(record.id, record.productName)}>
             Delete
           </Button>
         </Space>
