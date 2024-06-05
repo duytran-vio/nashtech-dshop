@@ -51,7 +51,7 @@ const ImageUploadComponent = (props) => {
         listType="picture-card"
         fileList={props.fileList}
         className="image-upload-grid"
-        maxCount={props.maxImageCount}
+        maxCount={props.maxImageCount + 1}
       >
         {props.fileList.length >= props.maxImageCount ? null : <div>Upload Button</div>}
       </Upload>

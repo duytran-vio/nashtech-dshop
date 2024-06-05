@@ -20,6 +20,7 @@ const CustomerHomePage = () => {
   const [page, setPage] = useState({
     page: 0,
     size: initPageSize,
+    sort: "soldNum,desc",
   });
   const { data: categories, isLoading } = useSWR(
     categoriesEndpoint,

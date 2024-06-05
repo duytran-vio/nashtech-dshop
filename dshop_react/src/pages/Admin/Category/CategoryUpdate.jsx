@@ -48,6 +48,8 @@ const CategoryUpdate = (props) => {
         }
         if (isNewCategory) {
           props.addCategory(values);
+          setFileList([]);
+          form.resetFields();
         } else {
           props.updateCategory(props.currentCategory.id, values);
         }

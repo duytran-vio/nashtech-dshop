@@ -45,6 +45,7 @@ const CustomerProductDetail = () => {
     productId: id,
     page: 0,
     size: initReviewPageSize,
+    sort: "dateCreated,desc"
   });
 
   const {
@@ -72,6 +73,7 @@ const CustomerProductDetail = () => {
       await createReview(review);
       message.success("Review submitted successfully");
       mutateReview();
+      mutateProduct();
     } catch (error) {
       message.error("Failed to submit review");
     }
@@ -81,11 +83,11 @@ const CustomerProductDetail = () => {
 
   const renderSubImages = (images) => {
     return Array.from({ length: 4 }, (_, index) => {
-      const source = images[index + 2]?.url || Default.PRODUCT_IMG;
+      const source = images[index + 1]?.url || Default.PRODUCT_IMG;
       return (
         <div className=" m-3">
           <img
-            key={index + 2}
+            key={index + 1}
             src={source}
             alt="thumbnail"
             className="h-20 w-fit border"
@@ -240,7 +242,7 @@ const CustomerProductDetail = () => {
                       },
                     ]}
                   >
-                    <Input.TextArea />
+                    <Input.TextArea placeholder="Input your review" defaultValue={""}/>
                   </Form.Item>
                   <div className="flex justify-between">
                     <Form.Item

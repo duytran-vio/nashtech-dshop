@@ -40,7 +40,7 @@ const items = [
 //   }),
 // };
 
-const initPageSize = 3;
+const initPageSize = 5;
 
 const ProductList = () => {
   // const [response, setResponse] = useState();
@@ -48,6 +48,7 @@ const ProductList = () => {
     status: undefined,
     page: 0,
     size: initPageSize,
+    sort: "dateCreated,desc",
   });
 
   const navigate = useNavigate();
@@ -187,7 +188,7 @@ const ProductList = () => {
           dataSource={response?.content}
           pagination={{
             showSizeChanger: true,
-            pageSizeOptions: ["3", "5", "10", "15", "20"],
+            pageSizeOptions: ["5", "10", "15", "20"],
             total: response?.totalElements,
             defaultPageSize: initPageSize,
             defaultCurrent: 1,
