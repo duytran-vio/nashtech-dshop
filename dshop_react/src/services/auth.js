@@ -1,10 +1,13 @@
+import axios from "axios";
 import api from "./api";
 
 const authEndpoint = "/auth";
+const { REACT_APP_BASE_URL } = process.env;
+
 
 export const sendLogin = async (username, password, desireRole) => {
-  await api
-    .post(`${authEndpoint}/login`, {
+  await axios
+    .post(`${REACT_APP_BASE_URL}auth/login`, {
       username,
       password,
     })
