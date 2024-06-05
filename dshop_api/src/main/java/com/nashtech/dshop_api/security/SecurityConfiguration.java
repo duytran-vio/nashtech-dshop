@@ -68,6 +68,8 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/categories/**").hasRole("ADMIN")
                     .requestMatchers(this.baseUrl + "/reviews/**").permitAll()
                     .requestMatchers("/uploads/**").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
                     .anyRequest().authenticated()
                     
                 )
