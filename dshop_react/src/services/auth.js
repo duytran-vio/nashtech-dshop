@@ -20,6 +20,10 @@ export const sendLogin = async (username, password, desireRole) => {
       return response.data;
     })
     .catch((error) => {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem('user');
+        throw new Error(error.response.data.message);
+      }
       throw new Error(error.message);
     });
 };
