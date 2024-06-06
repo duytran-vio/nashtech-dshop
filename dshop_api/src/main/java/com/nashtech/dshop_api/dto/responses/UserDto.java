@@ -16,4 +16,8 @@ public class UserDto {
     // private StatusType onlineStatus;
     private Boolean enableStatus;
     private String role;
+    private String firstName;
+    private String lastName;
+    private String dateCreated;
+    private String dateModified;
 }

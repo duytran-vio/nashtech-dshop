@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nashtech.dshop_api.data.entities.CustomerInfo;
 import com.nashtech.dshop_api.data.entities.Role;
 import com.nashtech.dshop_api.data.entities.Role_;
 import com.nashtech.dshop_api.data.entities.User;
@@ -18,6 +19,7 @@ import com.nashtech.dshop_api.exceptions.ResourceNotFoundException;
 import com.nashtech.dshop_api.mappers.UserMapper;
 import com.nashtech.dshop_api.security.JwtProvider;
 import com.nashtech.dshop_api.services.AuthService;
+import com.nashtech.dshop_api.services.CustomerInfoService;
 import com.nashtech.dshop_api.services.UserService;
 
 @Service
@@ -29,6 +31,7 @@ public class AuthServiceImpl implements AuthService{
     private PasswordEncoder passwordEncoder;
     private UserService userService;
     private RoleRepository roleRepository;
+    private CustomerInfoService customerInfoService;
 
     @Autowired
     public AuthServiceImpl(AuthenticationManager authenticationManager, 
@@ -36,13 +39,15 @@ public class AuthServiceImpl implements AuthService{
                             UserMapper mapper,
                             PasswordEncoder passwordEncoder,
                             UserService userService,
-                            RoleRepository roleRepository) {
+                            RoleRepository roleRepository,
+                            CustomerInfoService customerInfoService) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.roleRepository = roleRepository;
+        this.customerInfoService = customerInfoService;
     }
 
     @Override
@@ -63,6 +68,14 @@ public class AuthServiceImpl implements AuthService{
                 .orElseThrow(() -> new ResourceNotFoundException(Role.class.getSimpleName(), Role_.ID, request.getRoleId()));
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        CustomerInfo customerInfo = new CustomerInfo();
+        customerInfo.setFirstName(request.getFirstName());
+        customerInfo.setLastName(request.getLastName());
+        customerInfo.setFullName(request.getFirstName() + " " + request.getLastName());
+
+        user.setInfo(customerInfo);
+        customerInfo.setUser(user);
         return mapper.toDto(userService.save(user));
     }
     

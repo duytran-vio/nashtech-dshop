@@ -17,6 +17,10 @@ public abstract class UserMapper {
 
     @Mapping(source = "role.roleName", target = "role")
     @Mapping(source = "enableStatus", target = "enableStatus")
+    @Mapping(source = "info.firstName", target = "firstName")
+    @Mapping(source = "info.lastName", target = "lastName")
+    @Mapping(source = "dateCreated", target = "dateCreated")
+    @Mapping(source = "dateModified", target = "dateModified")
     public abstract UserDto toDto(User user);
     
     @Mapping(source = "roleId", target = "role.id")

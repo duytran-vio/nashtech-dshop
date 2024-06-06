@@ -1,4 +1,4 @@
-import { Button, Modal, Space, Table, Tag, message } from "antd";
+import { Button, Modal, Table, message } from "antd";
 import React, { useState } from "react";
 import useSWR from "swr";
 import { getUsers, updateUser, userEndPoint } from "../../../services/userService";
@@ -47,6 +47,16 @@ const CustomerList = () => {
       key: "id",
     },
     {
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+    },
+    {
       title: "Username",
       dataIndex: "username",
       key: "username",
@@ -55,6 +65,18 @@ const CustomerList = () => {
       title: "Email",
       dataIndex: "email",
       key: "email",
+    },
+    {
+      title:"CreatedOn",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => new Date(date).toLocaleString(),
+    },
+    {
+      title: "LastUpdatedOn",
+      dataIndex: "dateModified",
+      key: "dateModified",
+      render: (date) => new Date(date).toLocaleString(),
     },
     {
       title: "Action",

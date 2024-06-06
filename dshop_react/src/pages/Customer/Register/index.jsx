@@ -59,6 +59,32 @@ const CustomerRegister = () => {
           validateMessages={validateMessages}
         >
           <Form.Item
+            name="firstName"
+            label="First Name"
+            rules={[
+              {
+                required: true,
+                min: 0,
+                max: 50,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="lastName"
+            label="Last Name"
+            rules={[
+              {
+                required: true,
+                min: 0,
+                max: 50,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             name="username"
             label="Username"
             rules={[

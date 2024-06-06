@@ -20,4 +20,6 @@ public class ProductElementDto {
     private Boolean isFeatured;
     private Long stock;
     private String thumbnailUrl;
+    private String dateCreated;
+    private String dateModified;
 }

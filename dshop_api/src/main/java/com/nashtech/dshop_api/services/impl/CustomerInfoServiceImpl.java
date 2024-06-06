@@ -26,6 +26,7 @@ public class CustomerInfoServiceImpl implements CustomerInfoService{
         this.mapper = mapper;
     }
 
+    @Override
     public CustomerInfo createCustomerInfo(Long userId){
         var user = userService.getUserEntityById(userId);
         CustomerInfo customerInfo = new CustomerInfo();

@@ -141,6 +141,18 @@ const ProductList = () => {
       },
     },
     {
+      title:"CreatedOn",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => new Date(date).toLocaleString(),
+    },
+    {
+      title: "LastUpdatedOn",
+      dataIndex: "dateModified",
+      key: "dateModified",
+      render: (date) => new Date(date).toLocaleString(),
+    },
+    {
       title: "Action",
       key: "key",
       render: (record) => (
