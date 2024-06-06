@@ -19,6 +19,8 @@ public class CategoryDto {
     @Size(min = 3, max = 50)
     private String categoryName;
 
+    private String description;
+
     private Long layerNum;
 
     private Long parentId;

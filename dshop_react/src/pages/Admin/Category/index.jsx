@@ -15,6 +15,7 @@ import CategoryUpdate from "./CategoryUpdate";
 const initCategory = {
   id: null,
   categoryName: "",
+  description: "",
   image: null,
 };
 
