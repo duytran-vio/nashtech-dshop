@@ -3,6 +3,7 @@ package com.nashtech.dshop_api.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nashtech.dshop_api.data.entities.Image;
@@ -15,6 +16,7 @@ import com.nashtech.dshop_api.services.ImageService;
 import com.nashtech.dshop_api.utils.FileUtils;
 
 @Service
+@Transactional(readOnly = true)
 public class ImageServiceImpl implements ImageService {
 
     @Value("${file.upload-dir}")
@@ -33,6 +35,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    @Transactional
     public ImageUploadResponse saveImage(MultipartFile file, String serverHost) {
         String fileName = file.getOriginalFilename();
         String saveDir = staticDir + uploadDir;
