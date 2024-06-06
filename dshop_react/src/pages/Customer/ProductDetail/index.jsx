@@ -98,6 +98,10 @@ const CustomerProductDetail = () => {
   };
 
   const confirmBuy = () => {
+    if (quantity > product.stock) {
+      message.error("Quantity exceeds stock");
+      return;
+    }
     confirm({
       title: `Do you want to buy ${quantity} ${product.productName}?`,
       okText: "Yes",
@@ -123,7 +127,6 @@ const CustomerProductDetail = () => {
       rating: values.rating,
       content: values.review,
     };
-    console.log(review);
     handleSubmitReview(review);
   };
 
@@ -209,15 +212,7 @@ const CustomerProductDetail = () => {
         <Card className="h-fit">
           <Title level={2}>Description</Title>
           <div>
-            {" "}
-            aksjdfk jsldkfj alksdjflask jdflask djfasldk jasd.f sdlkfja sldkfj
-            asldfk asjdfas faskl jasdda fasd asd kflasjd flksadj flskdj f;asldf
-            <p>
-              a dfa sdjlkf asjdlfk jasldk jalsk a dflals jdflak sdjf;as aslkdfj
-              lskdj false asdjl kasjfajsh dflkjash dkfha skdjfhajsk hdflajshd
-              fliuahs dfasdf askdjfh kjasdhkf hsadkjfh ksajdh flksadj a sdjfh
-              kjasdhkf
-            </p>
+            {product.description}
           </div>
         </Card>
         {reviewLoading ? (

@@ -15,7 +15,8 @@ const initPageSize = 6;
 
 const CustomerProductList = () => {
   const location = useLocation();
-  const {categoryId} = location.state;
+  const categoryId = location.state?.categoryId;
+  
   
   const [filter, setFilter] = useState({
     categoryId: categoryId,
@@ -65,14 +66,14 @@ const CustomerProductList = () => {
   return (
     <div className="grid grid-cols-6 gap-2">
       <div className="col-span-1 bg-white border rounded-lg">
-        <Title level={3} className="p-2 border-b-2">
-          Categories
+        <Title level={4} className="p-2 border-b-2" onClick={()=> handleClickCategory(null)}>
+          <a>All Categories</a>
         </Title>
         <Menu
           onClick={handleClickCategory}
           className="w-full p-0"
           mode="inline"
-          selectedKeys={[filter.categoryId.toString()]}
+          selectedKeys={[filter.categoryId?.toString()]}
           items={categories?.map((category) => ({
             key: category.id,
             label: category.categoryName,
