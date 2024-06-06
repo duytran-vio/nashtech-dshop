@@ -55,7 +55,7 @@ const CustomerHomePage = () => {
   if (isLoading || isLoadingProducts) return <div>Loading...</div>;
   return (
     <div className="px-10">
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center"> */}
         <List
           grid={{
             column: 8,
@@ -78,7 +78,7 @@ const CustomerHomePage = () => {
             </Link>
           )}
         />
-      </div>
+      {/* </div> */}
       <div>
         <Title level={2}> Featured Products</Title>
         </div>

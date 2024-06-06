@@ -278,7 +278,7 @@ const CustomerProductDetail = () => {
                             src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
                           />
                         }
-                        title={item.userId}
+                        title={item.username}
                       />
                       {item.content}
                     </List.Item>
