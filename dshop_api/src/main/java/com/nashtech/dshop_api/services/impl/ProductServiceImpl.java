@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.dshop_api.data.entities.Category;
 import com.nashtech.dshop_api.data.entities.Category_;
@@ -33,6 +34,7 @@ import com.nashtech.dshop_api.utils.Constant;
 
 
 @Service
+@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductService{
 
     static final String STOCK_EXCEPTION_MESSAGE = "Input stock value must be greater than or equal to current stock";
@@ -122,6 +124,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public ProductDetailDto createProduct(ProductCreateUpdateRequest productCreateRequest) {
         if (productRepository.existsByProductNameAndIsDeletedFalse(productCreateRequest.getProductName())) {
             throw new ResourceAlreadyExistException(Product.class.getSimpleName(), 
@@ -141,6 +144,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public ProductDetailDto updateProduct(Long id, ProductCreateUpdateRequest productUpdateRequest) {
         var product = this.getProductEntityById(id);
         if (!product.getProductName().equals(productUpdateRequest.getProductName()) 
@@ -172,6 +176,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long id) {
         var product = this.getProductEntityById(id);
         product.setIsDeleted(true);
@@ -184,6 +189,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override 
+    @Transactional
     public void updateNewReviewRating(Product product, Long rating){
         var newRating = (product.getAvgRating() * product.getReviewNum() + rating) / (product.getReviewNum() + 1);
         product.setAvgRating(newRating);
@@ -192,6 +198,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public ProductDetailDto buyProduct(ProductBuyRequest productBuyRequest) {
         var product = this.getProductEntityById(productBuyRequest.getId());
         if (product.getStock() < productBuyRequest.getQuantity()){

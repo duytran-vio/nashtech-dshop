@@ -15,6 +15,8 @@ public class CategoryCreateUpdateRequest {
     @Size(min = 3, max = 50)
     private String categoryName;
 
+    private String description;
+
     private Long parentId;
 
     private Long imageId;

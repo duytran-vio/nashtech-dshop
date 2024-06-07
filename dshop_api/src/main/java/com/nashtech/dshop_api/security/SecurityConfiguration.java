@@ -66,8 +66,11 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.POST, this.baseUrl + "/categories/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, this.baseUrl + "/categories/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, this.baseUrl + "/categories/**").hasRole("ADMIN")
-                    .requestMatchers(this.baseUrl + "/reviews/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, this.baseUrl + "/reviews/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, this.baseUrl + "/reviews/**").hasRole("CUSTOMER")
                     .requestMatchers("/uploads/**").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
                     .anyRequest().authenticated()
                     
                 )

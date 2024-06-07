@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.dshop_api.data.entities.Role_;
 import com.nashtech.dshop_api.data.entities.StatusType;
@@ -22,6 +23,7 @@ import com.nashtech.dshop_api.services.UserService;
 
 
 @Service
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
@@ -53,6 +55,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }
@@ -83,6 +86,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         User user = this.getUserEntityById(id);
         userRepository.delete(user);
@@ -107,6 +111,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long id, UserUpdateRequest request) {
         User user = this.getUserEntityById(id);
         user = mapper.toEntityFromUpdateRequest(request, user);

@@ -24,6 +24,7 @@ const CategoryUpdate = (props) => {
   useEffect(() => {
     form.setFieldsValue({
       categoryName: props.currentCategory.categoryName,
+      description: props.currentCategory.description,
     });
     if (props.currentCategory.image) {
       setFileList([
@@ -48,6 +49,8 @@ const CategoryUpdate = (props) => {
         }
         if (isNewCategory) {
           props.addCategory(values);
+          setFileList([]);
+          form.resetFields();
         } else {
           props.updateCategory(props.currentCategory.id, values);
         }
@@ -97,6 +100,23 @@ const CategoryUpdate = (props) => {
             className="w-3/12"
             placeholder="Category Name"
             value={props.currentCategory.categoryName}
+          />
+        </Form.Item>
+        <Form.Item
+          label={<b>Category Description</b>}
+          name="description"
+          rules={[
+            {
+              max: 255,
+              message: "Category description must be at most 255 characters!",
+            },
+          ]}
+        >
+          <Input.TextArea
+            type="text"
+            className="w-3/12"
+            placeholder="Category Description"
+            value={props.currentCategory.description}
           />
         </Form.Item>
         <Form.Item label={<b>Category Image</b>}>

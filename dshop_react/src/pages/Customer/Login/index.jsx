@@ -13,7 +13,7 @@ const CustomerLogin = () => {
     try {
       await sendLogin(values.username, values.password, Role.CUSTOMER);
       message.success("Login Success");
-      navigate(Path.CUSTOMER_HOMEPAGE);
+      navigate(Path.CUSTOMER_ROOT);
     } catch (e) {
       message.error(e.message);
     }

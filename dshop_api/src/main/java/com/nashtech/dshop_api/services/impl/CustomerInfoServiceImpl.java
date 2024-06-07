@@ -2,6 +2,7 @@ package com.nashtech.dshop_api.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.dshop_api.data.entities.CustomerInfo;
 import com.nashtech.dshop_api.data.repositories.CustomerInfoRepository;
@@ -11,6 +12,7 @@ import com.nashtech.dshop_api.services.CustomerInfoService;
 import com.nashtech.dshop_api.services.UserService;
 
 @Service
+@Transactional(readOnly = true)
 public class CustomerInfoServiceImpl implements CustomerInfoService{
 
     private CustomerInfoRepository customerInfoRepository;
@@ -26,6 +28,8 @@ public class CustomerInfoServiceImpl implements CustomerInfoService{
         this.mapper = mapper;
     }
 
+    @Override
+    @Transactional
     public CustomerInfo createCustomerInfo(Long userId){
         var user = userService.getUserEntityById(userId);
         CustomerInfo customerInfo = new CustomerInfo();
@@ -46,6 +50,7 @@ public class CustomerInfoServiceImpl implements CustomerInfoService{
     }
 
     @Override
+    @Transactional
     public CustomerInfoDto putCustomerInfo(Long userId, CustomerInfoDto customerInfoDto) {
         CustomerInfo customerInfo = getCustomerInfoEntity(userId);
         mapper.putEntityFromDto(customerInfoDto, customerInfo);

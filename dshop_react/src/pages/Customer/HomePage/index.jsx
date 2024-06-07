@@ -17,9 +17,10 @@ import Title from "antd/es/typography/Title";
 const initPageSize = 8;
 
 const CustomerHomePage = () => {
-  const [page, setPage] = useState({
+  const [pageFilter, setPageFilter] = useState({
     page: 0,
     size: initPageSize,
+    sort: "soldNum,desc",
   });
   const { data: categories, isLoading } = useSWR(
     categoriesEndpoint,
@@ -40,7 +41,7 @@ const CustomerHomePage = () => {
       params: {
         filter: {
           isFeatured: true,
-          ...page,
+          ...pageFilter,
         },
       },
     },
@@ -48,13 +49,13 @@ const CustomerHomePage = () => {
   );
 
   const handleOnChangePage = async (page, pageSize) => {
-    setPage({ page: page - 1, size: pageSize });
+    setPageFilter({...pageFilter, page: page - 1, size: pageSize });
   };
 
   if (isLoading || isLoadingProducts) return <div>Loading...</div>;
   return (
     <div className="px-10">
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center"> */}
         <List
           grid={{
             column: 8,
@@ -77,7 +78,7 @@ const CustomerHomePage = () => {
             </Link>
           )}
         />
-      </div>
+      {/* </div> */}
       <div>
         <Title level={2}> Featured Products</Title>
         </div>
@@ -88,7 +89,7 @@ const CustomerHomePage = () => {
       </div>
       <Pagination
         className="flex justify-center my-5"
-        defaultCurrent={page.page + 1}
+        defaultCurrent={pageFilter.page + 1}
         total={featuredProducts?.totalElements}
         defaultPageSize={initPageSize}
         onChange={handleOnChangePage}

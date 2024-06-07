@@ -28,4 +28,6 @@ public class ReviewDto {
 
     @NotNull(message = "User ID is required")
     private Long userId;
+
+    private String username;
 }

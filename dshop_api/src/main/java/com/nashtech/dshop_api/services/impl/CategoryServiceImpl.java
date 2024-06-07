@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.dshop_api.data.entities.Category;
 import com.nashtech.dshop_api.data.entities.Image;
@@ -18,6 +19,7 @@ import com.nashtech.dshop_api.services.ImageService;
 
 
 @Service
+@Transactional(readOnly = true)
 public class CategoryServiceImpl implements CategoryService{
     
     private final CategoryRepository categoryRepository;
@@ -79,6 +81,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    @Transactional
     public CategoryDto createCategory(CategoryCreateUpdateRequest categoryRequest) {
         if (categoryRepository.existsByCategoryName(categoryRequest.getCategoryName())) {
             throw new ResourceAlreadyExistException(Category.class.getSimpleName(), "category name", categoryRequest.getCategoryName());
@@ -94,6 +97,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    @Transactional
     public CategoryDto updateCategory(Long id, CategoryCreateUpdateRequest categoryRequest) {
         Category category = getCategoryEntityById(id);
 
@@ -114,6 +118,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    @Transactional
     public void deleteCategory(Long id) {
         var category = getCategoryEntityById(id);
         categoryRepository.delete(category);

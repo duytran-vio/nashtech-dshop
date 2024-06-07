@@ -45,6 +45,7 @@ const CustomerProductDetail = () => {
     productId: id,
     page: 0,
     size: initReviewPageSize,
+    sort: "dateCreated,desc"
   });
 
   const {
@@ -72,6 +73,7 @@ const CustomerProductDetail = () => {
       await createReview(review);
       message.success("Review submitted successfully");
       mutateReview();
+      mutateProduct();
     } catch (error) {
       message.error("Failed to submit review");
     }
@@ -81,11 +83,11 @@ const CustomerProductDetail = () => {
 
   const renderSubImages = (images) => {
     return Array.from({ length: 4 }, (_, index) => {
-      const source = images[index + 2]?.url || Default.PRODUCT_IMG;
+      const source = images[index + 1]?.url || Default.PRODUCT_IMG;
       return (
         <div className=" m-3">
           <img
-            key={index + 2}
+            key={index + 1}
             src={source}
             alt="thumbnail"
             className="h-20 w-fit border"
@@ -96,6 +98,10 @@ const CustomerProductDetail = () => {
   };
 
   const confirmBuy = () => {
+    if (quantity > product.stock) {
+      message.error("Quantity exceeds stock");
+      return;
+    }
     confirm({
       title: `Do you want to buy ${quantity} ${product.productName}?`,
       okText: "Yes",
@@ -115,13 +121,16 @@ const CustomerProductDetail = () => {
 
   const submitReview = (values) => {
     const customer = JSON.parse(localStorage.getItem("user"));
+    if (customer === null) {
+      message.error("Please login to submit review");
+      return;
+    }
     const review = {
       userId: customer.id,
       productId: id,
       rating: values.rating,
       content: values.review,
     };
-    console.log(review);
     handleSubmitReview(review);
   };
 
@@ -152,7 +161,7 @@ const CustomerProductDetail = () => {
                   color: "#fadb14",
                 }}
               />{" "}
-              <strong>{product.avgRating}</strong>
+              <strong>{product.avgRating.toFixed(1)}</strong>
             </div>
             <div>
               {" "}
@@ -207,15 +216,7 @@ const CustomerProductDetail = () => {
         <Card className="h-fit">
           <Title level={2}>Description</Title>
           <div>
-            {" "}
-            aksjdfk jsldkfj alksdjflask jdflask djfasldk jasd.f sdlkfja sldkfj
-            asldfk asjdfas faskl jasdda fasd asd kflasjd flksadj flskdj f;asldf
-            <p>
-              a dfa sdjlkf asjdlfk jasldk jalsk a dflals jdflak sdjf;as aslkdfj
-              lskdj false asdjl kasjfajsh dflkjash dkfha skdjfhajsk hdflajshd
-              fliuahs dfasdf askdjfh kjasdhkf hsadkjfh ksajdh flksadj a sdjfh
-              kjasdhkf
-            </p>
+            {product.description}
           </div>
         </Card>
         {reviewLoading ? (
@@ -240,7 +241,7 @@ const CustomerProductDetail = () => {
                       },
                     ]}
                   >
-                    <Input.TextArea />
+                    <Input.TextArea placeholder="Input your review" defaultValue={""}/>
                   </Form.Item>
                   <div className="flex justify-between">
                     <Form.Item
@@ -281,7 +282,7 @@ const CustomerProductDetail = () => {
                             src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
                           />
                         }
-                        title={item.userId}
+                        title={item.username}
                       />
                       {item.content}
                     </List.Item>

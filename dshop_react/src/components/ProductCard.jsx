@@ -32,7 +32,7 @@ const ProductCard = (props) => {
                   color: "#fadb14",
                 }}
               />{" "}
-              {props.product.avgRating}
+              {props.product.avgRating.toFixed(1)}
             </div>
             <div>{props.product.soldNum} items sold</div>
           </div>

@@ -15,7 +15,7 @@ const AdminHome = () => {
   if (user){
     if (user.role !== Role.ADMIN){
       message.error("You don't have permission to access this page");
-      return <Navigate to={Path.CUSTOMER_LOGIN} />;
+      return <Navigate to={Path.ADMIN_LOGIN} />;
     }
 
     // handle old admin user with invalid token

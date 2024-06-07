@@ -2,6 +2,7 @@ package com.nashtech.dshop_api.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nashtech.dshop_api.data.entities.Card;
 import com.nashtech.dshop_api.data.entities.User;
@@ -14,6 +15,7 @@ import com.nashtech.dshop_api.services.CardService;
 import com.nashtech.dshop_api.services.UserService;
 
 @Service
+@Transactional(readOnly = true)
 public class CardServiceImpl implements CardService{
     
     private final CardRepository cardRepository;
@@ -46,6 +48,7 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    @Transactional
     public CardDto addCard(Long userId, CardDto cardDto) {
         if (cardRepository.findByUserId(userId).isPresent()) {
             throw new ResourceAlreadyExistException(Card.class.getSimpleName(), "userId", userId);
@@ -58,6 +61,7 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    @Transactional
     public CardDto updateCard(Long userId, CardDto cardDto) {
         Card card = this.getCardEntityByUserId(userId);
         mapper.updateEntityFromDto(card, cardDto);
@@ -65,6 +69,7 @@ public class CardServiceImpl implements CardService{
     }
 
     @Override
+    @Transactional
     public void deleteCard(Long userId) {
         Card card = this.getCardEntityByUserId(userId);
         cardRepository.delete(card);

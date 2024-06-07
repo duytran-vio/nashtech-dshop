@@ -25,6 +25,9 @@ public class Category extends AuditEntity<Long> {
     @Column(name = "category_name", nullable = false, unique = true)
     private String categoryName;
 
+    @Column(name = "description")
+    private String description;
+    
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 

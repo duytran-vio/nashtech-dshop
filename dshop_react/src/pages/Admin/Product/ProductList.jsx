@@ -40,7 +40,7 @@ const items = [
 //   }),
 // };
 
-const initPageSize = 3;
+const initPageSize = 5;
 
 const ProductList = () => {
   // const [response, setResponse] = useState();
@@ -48,6 +48,7 @@ const ProductList = () => {
     status: undefined,
     page: 0,
     size: initPageSize,
+    sort: "dateCreated,desc",
   });
 
   const navigate = useNavigate();
@@ -140,6 +141,18 @@ const ProductList = () => {
       },
     },
     {
+      title:"CreatedOn",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => new Date(date).toLocaleString(),
+    },
+    {
+      title: "LastUpdatedOn",
+      dataIndex: "dateModified",
+      key: "dateModified",
+      render: (date) => new Date(date).toLocaleString(),
+    },
+    {
       title: "Action",
       key: "key",
       render: (record) => (
@@ -187,7 +200,7 @@ const ProductList = () => {
           dataSource={response?.content}
           pagination={{
             showSizeChanger: true,
-            pageSizeOptions: ["3", "5", "10", "15", "20"],
+            pageSizeOptions: ["5", "10", "15", "20"],
             total: response?.totalElements,
             defaultPageSize: initPageSize,
             defaultCurrent: 1,

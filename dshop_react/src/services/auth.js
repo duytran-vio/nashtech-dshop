@@ -1,10 +1,13 @@
+import axios from "axios";
 import api from "./api";
 
 const authEndpoint = "/auth";
+const { REACT_APP_BASE_URL } = process.env;
+
 
 export const sendLogin = async (username, password, desireRole) => {
-  await api
-    .post(`${authEndpoint}/login`, {
+  await axios
+    .post(`${REACT_APP_BASE_URL}auth/login`, {
       username,
       password,
     })
@@ -17,6 +20,10 @@ export const sendLogin = async (username, password, desireRole) => {
       return response.data;
     })
     .catch((error) => {
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem('user');
+        throw new Error(error.response.data.message);
+      }
       throw new Error(error.message);
     });
 };
