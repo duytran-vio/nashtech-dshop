@@ -121,6 +121,10 @@ const CustomerProductDetail = () => {
 
   const submitReview = (values) => {
     const customer = JSON.parse(localStorage.getItem("user"));
+    if (customer === null) {
+      message.error("Please login to submit review");
+      return;
+    }
     const review = {
       userId: customer.id,
       productId: id,
@@ -157,7 +161,7 @@ const CustomerProductDetail = () => {
                   color: "#fadb14",
                 }}
               />{" "}
-              <strong>{product.avgRating}</strong>
+              <strong>{product.avgRating.toFixed(1)}</strong>
             </div>
             <div>
               {" "}
